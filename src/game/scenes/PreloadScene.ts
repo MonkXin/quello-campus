@@ -29,14 +29,26 @@ export class PreloadScene extends Phaser.Scene {
 
     const track = this.add.rectangle(x, y, barWidth, 6, 0xd7c49a, 0.22).setOrigin(0, 0.5);
     const fill = this.add.rectangle(x, y, 2, 6, 0xffd98a, 0.92).setOrigin(0, 0.5);
+    const errorText = this.add
+      .text(width / 2, height * 0.66, "", {
+        color: "#ffd0b8",
+        fontFamily: "Arial, sans-serif",
+        fontSize: "14px"
+      })
+      .setOrigin(0.5);
 
     this.load.on("progress", (value: number) => {
       fill.width = Math.max(2, barWidth * value);
     });
 
+    this.load.on("loaderror", (file: Phaser.Loader.File) => {
+      errorText.setText(`地图资源加载失败，请刷新重试：${file.key}`);
+    });
+
     this.load.on("complete", () => {
       track.destroy();
       fill.destroy();
+      errorText.destroy();
     });
 
     this.load.json("map-points", "data/map_points.json");
