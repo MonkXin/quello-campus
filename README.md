@@ -17,6 +17,9 @@ pnpm build
 
 The production-ready static site is written to `dist/`.
 
+Generated source PNGs that are not needed by the browser live under `art-source/` so
+they remain available for future art work without inflating the static deployment.
+
 ## Preview
 
 ```bash

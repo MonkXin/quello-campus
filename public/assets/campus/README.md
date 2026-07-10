@@ -16,11 +16,15 @@ All map-sized layers must use the same canvas size and origin. Preferred canvas 
 
 The current implementation now uses the first generated layered map set:
 
-- `map/base.png`
+- `map/base.webp` (compressed runtime derivative of the generated PNG)
 - `map/foreground-canopy.png`
 - `map/shadows.png`
 - `map/water.png`
 - `atmosphere/dusk-overlay.png`
+
+The title logo and canopy frame also use compressed WebP runtime derivatives. Their
+original PNG files are preserved under `art-source/runtime-originals/`; the website
+only ships and loads the WebP files.
 
 Important: the source images supplied on 2026-07-10 were RGB PNGs with checkerboard backgrounds baked into the pixels. The runtime layers here were automatically converted into RGBA for integration. For the public-quality pass, export true transparent PNGs directly from the image tool or design file.
 
