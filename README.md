@@ -15,6 +15,16 @@ pnpm dev
 pnpm build
 ```
 
+The production-ready static site is written to `dist/`.
+
+## Preview
+
+```bash
+pnpm dev
+```
+
+Open `http://localhost:5174/`.
+
 ## Process Generated Layers
 
 Some image tools export fake transparency as a checkerboard baked into RGB pixels. Convert those into runtime RGBA layers with:
