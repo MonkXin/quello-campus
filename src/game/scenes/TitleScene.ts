@@ -74,5 +74,14 @@ export class TitleScene extends Phaser.Scene {
     start.on("pointerdown", () => {
       this.scene.start("CampusScene");
     });
+
+    this.scale.on("resize", this.restartForResize, this);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.scale.off("resize", this.restartForResize, this);
+    });
+  }
+
+  private restartForResize() {
+    this.scene.restart();
   }
 }
