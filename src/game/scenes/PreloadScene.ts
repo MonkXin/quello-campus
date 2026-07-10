@@ -33,6 +33,11 @@ export class PreloadScene extends Phaser.Scene {
 
     this.load.json("map-points", "data/map_points.json");
     this.load.json("events", "data/events.json");
+    this.load.image("campus-base", "assets/campus/map/base.png");
+    this.load.image("campus-water", "assets/campus/map/water.png");
+    this.load.image("campus-shadows", "assets/campus/map/shadows.png");
+    this.load.image("campus-canopy", "assets/campus/map/foreground-canopy.png");
+    this.load.image("campus-dusk-overlay", "assets/campus/atmosphere/dusk-overlay.png");
   }
 
   create() {

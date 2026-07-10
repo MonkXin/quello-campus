@@ -14,4 +14,12 @@ Expected Phase 1 filenames:
 
 All map-sized layers must use the same canvas size and origin. Preferred canvas size is `4096 x 3072` or `5120 x 3840`.
 
-The current implementation uses a programmatic placeholder map so engineering can continue before final art arrives.
+The current implementation now uses the first generated layered map set:
+
+- `map/base.png`
+- `map/foreground-canopy.png`
+- `map/shadows.png`
+- `map/water.png`
+- `atmosphere/dusk-overlay.png`
+
+Important: the source images supplied on 2026-07-10 were RGB PNGs with checkerboard backgrounds baked into the pixels. The runtime layers here were automatically converted into RGBA for integration. For the public-quality pass, export true transparent PNGs directly from the image tool or design file.

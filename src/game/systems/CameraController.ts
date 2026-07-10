@@ -4,7 +4,7 @@ import type { InputController } from "./InputController";
 
 export class CameraController {
   private readonly camera: Phaser.Cameras.Scene2D.Camera;
-  private speed = 360;
+  private speed = 260;
 
   constructor(
     private readonly scene: Phaser.Scene,
@@ -20,9 +20,9 @@ export class CameraController {
     const width = this.scene.scale.width;
     const height = this.scene.scale.height;
     const isPortrait = height > width;
-    const zoom = isPortrait ? 0.46 : 0.62;
+    const zoom = isPortrait ? 0.78 : 0.92;
 
-    this.camera.setZoom(Math.min(0.72, Math.max(0.42, zoom)));
+    this.camera.setZoom(Math.min(1, Math.max(0.68, zoom)));
   }
 
   update(deltaMs: number) {

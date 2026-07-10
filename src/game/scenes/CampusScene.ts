@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { MAP_HEIGHT, MAP_WIDTH } from "../config";
+import { MAP_HEIGHT, MAP_SCALE, MAP_WIDTH } from "../config";
 import { AtmosphereController } from "../systems/AtmosphereController";
 import { AudioController } from "../systems/AudioController";
 import { CameraController } from "../systems/CameraController";
@@ -25,6 +25,8 @@ export class CampusScene extends Phaser.Scene {
   private muteLabel?: Phaser.GameObjects.Text;
   private joystick?: JoystickState;
   private waterHighlights: Phaser.GameObjects.Ellipse[] = [];
+  private waterLayer?: Phaser.GameObjects.Image;
+  private duskLayer?: Phaser.GameObjects.Image;
 
   constructor() {
     super("CampusScene");
@@ -33,7 +35,7 @@ export class CampusScene extends Phaser.Scene {
   create() {
     this.cameras.main.setBackgroundColor("#102019");
 
-    this.createPlaceholderCampus();
+    this.createCampusArtLayers();
 
     this.inputController = new InputController(this);
     this.cameraController = new CameraController(this, this.inputController);
@@ -76,6 +78,58 @@ export class CampusScene extends Phaser.Scene {
     this.createBakedShadows();
     this.createForegroundCanopy();
     this.createAtmosphericLightBeams();
+  }
+
+  private createCampusArtLayers() {
+    this.add.image(0, 0, "campus-base").setOrigin(0).setScale(MAP_SCALE).setDepth(0);
+
+    this.waterLayer = this.add
+      .image(0, 0, "campus-water")
+      .setOrigin(0)
+      .setScale(MAP_SCALE)
+      .setAlpha(0.52)
+      .setDepth(8)
+      .setBlendMode(Phaser.BlendModes.ADD);
+
+    this.add
+      .image(0, 0, "campus-shadows")
+      .setOrigin(0)
+      .setScale(MAP_SCALE)
+      .setAlpha(0.56)
+      .setDepth(32)
+      .setBlendMode(Phaser.BlendModes.MULTIPLY);
+
+    this.duskLayer = this.add
+      .image(0, 0, "campus-dusk-overlay")
+      .setOrigin(0)
+      .setScale(MAP_SCALE)
+      .setAlpha(0.38)
+      .setDepth(92)
+      .setBlendMode(Phaser.BlendModes.ADD);
+
+    this.add
+      .image(0, 0, "campus-canopy")
+      .setOrigin(0)
+      .setScale(MAP_SCALE)
+      .setDepth(112);
+
+    this.tweens.add({
+      targets: this.waterLayer,
+      alpha: 0.72,
+      duration: 2200,
+      yoyo: true,
+      repeat: -1,
+      ease: "Sine.easeInOut"
+    });
+
+    this.tweens.add({
+      targets: this.duskLayer,
+      alpha: 0.52,
+      duration: 5200,
+      yoyo: true,
+      repeat: -1,
+      ease: "Sine.easeInOut"
+    });
   }
 
   private createGrassTexture() {
