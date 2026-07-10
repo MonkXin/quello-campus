@@ -26,17 +26,18 @@ export class AtmosphereController {
     this.cloudShadow.setDepth(12);
     this.cloudShadow.setAngle(-12);
 
-    const particleTexture = this.createLeafTexture();
+    const particleTexture = this.getParticleTexture();
     this.particles = scene.add.particles(0, 0, particleTexture, {
+      frame: [0, 1, 2, 3, 4, 5, 6, 7],
       x: { min: 0, max: MAP_WIDTH },
       y: -80,
       lifespan: { min: 9000, max: 16000 },
       speedX: { min: -18, max: 42 },
       speedY: { min: 18, max: 52 },
-      scale: { min: 0.55, max: 1.1 },
-      alpha: { start: 0.68, end: 0 },
+      scale: { min: 0.08, max: 0.16 },
+      alpha: { start: 0.58, end: 0 },
       rotate: { min: -180, max: 180 },
-      frequency: 460,
+      frequency: 520,
       quantity: 1
     });
     this.particles.setDepth(95);
@@ -68,6 +69,14 @@ export class AtmosphereController {
     const color = Phaser.Display.Color.HexStringToColor(preset.tint).color;
     this.overlay.setFillStyle(color, preset.id === "dusk" ? 0.16 : 0.06);
     this.cloudShadow.setAlpha(preset.shadowOpacity * 0.32);
+  }
+
+  private getParticleTexture() {
+    if (this.scene.textures.exists("leaf-particles")) {
+      return "leaf-particles";
+    }
+
+    return this.createLeafTexture();
   }
 
   private createLeafTexture() {

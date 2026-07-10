@@ -33,3 +33,12 @@ export interface EnvironmentConfig {
   defaultPreset: EnvironmentPreset["id"];
   presets: EnvironmentPreset[];
 }
+
+export interface SiteConfig {
+  title: string;
+  subtitle: string;
+  startLabel: string;
+  loadingLabel: string;
+  controlHint: string;
+  titleHint: string;
+}

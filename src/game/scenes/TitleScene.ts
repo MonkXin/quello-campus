@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import type { SiteConfig } from "../types/content";
 
 export class TitleScene extends Phaser.Scene {
   constructor() {
@@ -7,6 +8,7 @@ export class TitleScene extends Phaser.Scene {
 
   create() {
     const { width, height } = this.scale;
+    const site = this.cache.json.get("site") as SiteConfig;
     this.cameras.main.setBackgroundColor("#101d17");
 
     const background = this.add.image(width / 2, height / 2, "campus-base").setOrigin(0.5);
@@ -17,13 +19,8 @@ export class TitleScene extends Phaser.Scene {
     this.add.rectangle(width / 2, height / 2, width, height, 0x07110d, 0.36);
     this.add.rectangle(width / 2, height / 2, width, height, 0xf0c06a, 0.1);
 
-    this.add
-      .text(width / 2, height * 0.36, "Quello Campus", {
-        color: "#fff2cf",
-        fontFamily: "Georgia, 'Times New Roman', serif",
-        fontSize: `${Math.max(42, Math.min(74, width * 0.07))}px`
-      })
-      .setOrigin(0.5);
+    const logo = this.add.image(width / 2, height * 0.36, "quello-campus-title").setOrigin(0.5);
+    logo.setScale(Math.min(width * 0.66 / logo.width, 0.42));
 
     this.add
       .text(width / 2, height * 0.47, "一座正在醒来的像素校园", {
@@ -31,10 +28,11 @@ export class TitleScene extends Phaser.Scene {
         fontFamily: "Arial, sans-serif",
         fontSize: "18px"
       })
+      .setText(site.subtitle)
       .setOrigin(0.5);
 
     const start = this.add
-      .text(width / 2, height * 0.63, "进入校园", {
+      .text(width / 2, height * 0.63, site.startLabel, {
         backgroundColor: "#f3d27b",
         color: "#1d2118",
         fontFamily: "Arial, sans-serif",
@@ -45,7 +43,7 @@ export class TitleScene extends Phaser.Scene {
       .setInteractive({ useHandCursor: true });
 
     this.add
-      .text(width / 2, height * 0.74, "拖动画面 / WASD / 方向键 / 屏幕摇杆", {
+      .text(width / 2, height * 0.74, site.titleHint, {
         color: "#afc7af",
         fontFamily: "Arial, sans-serif",
         fontSize: "14px"
