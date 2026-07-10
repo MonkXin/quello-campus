@@ -5,6 +5,9 @@ import type { InputController } from "./InputController";
 export class CameraController {
   private readonly camera: Phaser.Cameras.Scene2D.Camera;
   private speed = 260;
+  private dragPointerId: number | null = null;
+  private lastDragX = 0;
+  private lastDragY = 0;
 
   constructor(
     private readonly scene: Phaser.Scene,
@@ -14,6 +17,7 @@ export class CameraController {
     this.camera.setBounds(0, 0, MAP_WIDTH, MAP_HEIGHT);
     this.camera.centerOn(MAP_WIDTH * 0.5, MAP_HEIGHT * 0.55);
     this.resize();
+    this.bindDragPan();
   }
 
   resize() {
@@ -42,5 +46,46 @@ export class CameraController {
       0,
       MAP_HEIGHT - this.camera.displayHeight
     );
+  }
+
+  private bindDragPan() {
+    this.scene.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+      if (pointer.x < 150 && pointer.y > this.scene.scale.height - 160) {
+        return;
+      }
+
+      this.dragPointerId = pointer.id;
+      this.lastDragX = pointer.x;
+      this.lastDragY = pointer.y;
+    });
+
+    this.scene.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
+      if (this.dragPointerId !== pointer.id || !pointer.isDown) {
+        return;
+      }
+
+      const zoom = this.camera.zoom || 1;
+      const deltaX = (this.lastDragX - pointer.x) / zoom;
+      const deltaY = (this.lastDragY - pointer.y) / zoom;
+
+      this.camera.scrollX = Phaser.Math.Clamp(
+        this.camera.scrollX + deltaX,
+        0,
+        MAP_WIDTH - this.camera.displayWidth
+      );
+      this.camera.scrollY = Phaser.Math.Clamp(
+        this.camera.scrollY + deltaY,
+        0,
+        MAP_HEIGHT - this.camera.displayHeight
+      );
+      this.lastDragX = pointer.x;
+      this.lastDragY = pointer.y;
+    });
+
+    this.scene.input.on("pointerup", (pointer: Phaser.Input.Pointer) => {
+      if (this.dragPointerId === pointer.id) {
+        this.dragPointerId = null;
+      }
+    });
   }
 }

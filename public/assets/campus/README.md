@@ -23,3 +23,5 @@ The current implementation now uses the first generated layered map set:
 - `atmosphere/dusk-overlay.png`
 
 Important: the source images supplied on 2026-07-10 were RGB PNGs with checkerboard backgrounds baked into the pixels. The runtime layers here were automatically converted into RGBA for integration. For the public-quality pass, export true transparent PNGs directly from the image tool or design file.
+
+If the generated source still contains a baked checkerboard, run `scripts/process-campus-layers.py` from the project root.

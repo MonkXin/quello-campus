@@ -51,6 +51,7 @@ export class CampusScene extends Phaser.Scene {
 
     this.createHud();
     this.createJoystick();
+    this.createTransientHint();
 
     this.scale.on("resize", () => {
       this.cameraController?.resize();
@@ -366,6 +367,30 @@ export class CampusScene extends Phaser.Scene {
     this.muteLabel.on("pointerdown", () => {
       const muted = this.audio?.toggleMuted() ?? true;
       this.muteLabel?.setText(`声音: ${muted ? "关" : "开"}`);
+    });
+  }
+
+  private createTransientHint() {
+    const hint = ResponsiveViewport.createFixedHudText(
+      this,
+      this.scale.width / 2,
+      this.scale.height - 42,
+      "拖动画面或使用 WASD / 方向键慢慢浏览校园",
+      {
+        color: "#fff6d6",
+        fontFamily: "Arial, sans-serif",
+        fontSize: "15px",
+        backgroundColor: "rgba(8, 20, 15, 0.45)",
+        padding: { x: 14, y: 8 }
+      }
+    ).setOrigin(0.5);
+
+    this.tweens.add({
+      targets: hint,
+      alpha: 0,
+      delay: 4200,
+      duration: 1200,
+      onComplete: () => hint.destroy()
     });
   }
 

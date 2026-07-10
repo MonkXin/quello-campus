@@ -15,6 +15,15 @@ pnpm dev
 pnpm build
 ```
 
+## Process Generated Layers
+
+Some image tools export fake transparency as a checkerboard baked into RGB pixels. Convert those into runtime RGBA layers with:
+
+```bash
+python3 scripts/process-campus-layers.py canopy /path/to/canopy.png public/assets/campus/map/foreground-canopy.png
+python3 scripts/process-campus-layers.py atmosphere /path/to/dusk.png public/assets/campus/atmosphere/dusk-overlay.png
+```
+
 ## Scope
 
 This project follows `docs/superpowers/specs/2026-07-10-quello-campus-web-architecture-whitepaper.md`.
