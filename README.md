@@ -25,6 +25,18 @@ pnpm dev
 
 Open `http://localhost:5174/`.
 
+## Experience Controls
+
+- Drag / WASD / arrow keys: browse the campus.
+- `T`: switch sunny / dusk.
+- `M`: toggle ambient audio.
+- `N`: focus the next future pet spot.
+- `?debugPoints=1`: show point names and radii.
+
+## Standalone Site
+
+The site is currently designed to run independently from the official website. It includes Open Graph sharing metadata, a wide share cover, `manifest.webmanifest`, and `robots.txt` so a static deployment can be shared directly.
+
 ## Process Generated Layers
 
 Some image tools export fake transparency as a checkerboard baked into RGB pixels. Convert those into runtime RGBA layers with:
