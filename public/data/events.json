@@ -1,0 +1,21 @@
+{
+  "defaultPreset": "sunny",
+  "presets": [
+    {
+      "id": "sunny",
+      "label": "Sunny",
+      "tint": "#ffffff",
+      "shadowOpacity": 0.42,
+      "particleSet": "leaf_light",
+      "music": "campus_lofi_day"
+    },
+    {
+      "id": "dusk",
+      "label": "Dusk",
+      "tint": "#ffd6a0",
+      "shadowOpacity": 0.58,
+      "particleSet": "leaf_warm",
+      "music": "campus_lofi_dusk"
+    }
+  ]
+}

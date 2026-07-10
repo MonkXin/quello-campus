@@ -1,0 +1,102 @@
+[
+  {
+    "id": "main_gate",
+    "name": "主校门",
+    "type": "arrival",
+    "x": 560,
+    "y": 2440,
+    "radius": 130,
+    "phase": 1,
+    "description": "未来适合做第一次进入校园和迎接宠物的点位。"
+  },
+  {
+    "id": "avenue",
+    "name": "林荫大道",
+    "type": "walk",
+    "x": 1660,
+    "y": 1570,
+    "radius": 160,
+    "phase": 1,
+    "description": "未来适合让宠物慢慢经过或停下来观察树影。"
+  },
+  {
+    "id": "lake_bench",
+    "name": "湖边长椅",
+    "type": "rest",
+    "x": 1240,
+    "y": 1180,
+    "radius": 150,
+    "phase": 1,
+    "description": "安静发呆、喝牛奶、睡午觉的未来出没点。"
+  },
+  {
+    "id": "library_steps",
+    "name": "图书馆台阶",
+    "type": "study",
+    "x": 2220,
+    "y": 1260,
+    "radius": 150,
+    "phase": 1,
+    "description": "未来适合学习型宠物读书、记笔记。"
+  },
+  {
+    "id": "cafeteria_entrance",
+    "name": "食堂门口",
+    "type": "food",
+    "x": 3020,
+    "y": 1740,
+    "radius": 145,
+    "phase": 1,
+    "description": "未来适合厨师、吃饭和甜品互动。"
+  },
+  {
+    "id": "student_plaza",
+    "name": "学生广场",
+    "type": "social",
+    "x": 2480,
+    "y": 1850,
+    "radius": 170,
+    "phase": 1,
+    "description": "未来适合宠物偶遇、社群截图和轻互动。"
+  },
+  {
+    "id": "sports_field_edge",
+    "name": "操场边",
+    "type": "sport",
+    "x": 2960,
+    "y": 820,
+    "radius": 165,
+    "phase": 1,
+    "description": "未来适合运动、训练和飞行员出没。"
+  },
+  {
+    "id": "dorm_entrance",
+    "name": "宿舍楼下",
+    "type": "home",
+    "x": 3220,
+    "y": 2470,
+    "radius": 160,
+    "phase": 1,
+    "description": "未来适合夜晚回家、睡前日常。"
+  },
+  {
+    "id": "teaching_corridor",
+    "name": "教学楼走廊",
+    "type": "study",
+    "x": 1790,
+    "y": 2410,
+    "radius": 150,
+    "phase": 1,
+    "description": "未来适合赶课、等人、轻对白。"
+  },
+  {
+    "id": "garden_tree_shadow",
+    "name": "小花园树下",
+    "type": "garden",
+    "x": 1880,
+    "y": 1450,
+    "radius": 145,
+    "phase": 1,
+    "description": "未来适合睡觉、看云和躲在树影下。"
+  }
+]
