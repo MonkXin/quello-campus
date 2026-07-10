@@ -26,6 +26,11 @@ The title logo and canopy frame also use compressed WebP runtime derivatives. Th
 original PNG files are preserved under `art-source/runtime-originals/`; the website
 only ships and loads the WebP files.
 
+The water layer delivered on 2026-07-10 is a true RGBA source. Its shoreline extended
+over a few buildings, so the runtime file is clipped by the previous verified water
+mask. Both the delivered source and previous runtime layer are preserved under
+`art-source/`.
+
 Important: the source images supplied on 2026-07-10 were RGB PNGs with checkerboard backgrounds baked into the pixels. The runtime layers here were automatically converted into RGBA for integration. For the public-quality pass, export true transparent PNGs directly from the image tool or design file.
 
 If the generated source still contains a baked checkerboard, run `scripts/process-campus-layers.py` from the project root.
