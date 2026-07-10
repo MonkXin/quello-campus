@@ -28,6 +28,7 @@ export class CampusScene extends Phaser.Scene {
   private waterHighlights: Phaser.GameObjects.Ellipse[] = [];
   private waterLayer?: Phaser.GameObjects.Image;
   private shadowLayer?: Phaser.GameObjects.Image;
+  private cloudShadowLayer?: Phaser.GameObjects.Image;
   private duskLayer?: Phaser.GameObjects.Image;
   private waterTween?: Phaser.Tweens.Tween;
   private duskTween?: Phaser.Tweens.Tween;
@@ -63,6 +64,7 @@ export class CampusScene extends Phaser.Scene {
     this.createHud();
     this.createJoystick();
     this.createTransientHint();
+    this.bindPresenterKeys();
 
     this.scale.on("resize", () => {
       this.cameraController?.resize();
@@ -100,6 +102,14 @@ export class CampusScene extends Phaser.Scene {
       .setDepth(32)
       .setBlendMode(Phaser.BlendModes.MULTIPLY);
 
+    this.cloudShadowLayer = this.add
+      .image(MAP_WIDTH * 0.52, MAP_HEIGHT * 0.52, "campus-cloud-shadows")
+      .setOrigin(0.5)
+      .setScale(2.85)
+      .setAlpha(0.12)
+      .setDepth(34)
+      .setBlendMode(Phaser.BlendModes.MULTIPLY);
+
     this.duskLayer = this.add
       .image(0, 0, "campus-dusk-overlay")
       .setOrigin(0)
@@ -127,6 +137,17 @@ export class CampusScene extends Phaser.Scene {
       targets: this.duskLayer,
       alpha: 0.24,
       duration: 5200,
+      yoyo: true,
+      repeat: -1,
+      ease: "Sine.easeInOut"
+    });
+
+    this.tweens.add({
+      targets: this.cloudShadowLayer,
+      x: MAP_WIDTH * 0.48,
+      y: MAP_HEIGHT * 0.55,
+      alpha: 0.18,
+      duration: 22000,
       yoyo: true,
       repeat: -1,
       ease: "Sine.easeInOut"
@@ -178,11 +199,7 @@ export class CampusScene extends Phaser.Scene {
     this.layoutHud();
 
     switchButton.on("pointerdown", () => {
-      const preset = this.atmosphere?.togglePreset();
-      this.atmosphereLabel?.setText(`天气: ${this.atmosphere?.getActiveLabel()}`);
-      if (preset) {
-        this.applyEnvironmentVisuals(preset.id);
-      }
+      this.toggleEnvironment();
     });
 
     this.muteLabel.on("pointerdown", () => {
@@ -191,6 +208,29 @@ export class CampusScene extends Phaser.Scene {
     });
 
     this.pointLabel.on("pointerdown", () => this.focusNextPoint());
+  }
+
+  private bindPresenterKeys() {
+    const keyboard = this.input.keyboard;
+
+    if (!keyboard) {
+      return;
+    }
+
+    keyboard.on("keydown-T", () => this.toggleEnvironment());
+    keyboard.on("keydown-M", () => {
+      const muted = this.audio?.toggleMuted() ?? true;
+      this.muteLabel?.setText(`声音: ${muted ? "关" : "开"}`);
+    });
+    keyboard.on("keydown-N", () => this.focusNextPoint());
+  }
+
+  private toggleEnvironment() {
+    const preset = this.atmosphere?.togglePreset();
+    this.atmosphereLabel?.setText(`天气: ${this.atmosphere?.getActiveLabel()}`);
+    if (preset) {
+      this.applyEnvironmentVisuals(preset.id);
+    }
   }
 
   private layoutHud() {
@@ -229,6 +269,13 @@ export class CampusScene extends Phaser.Scene {
     this.tweens.add({
       targets: this.shadowLayer,
       alpha: isDusk ? 0.62 : 0.4,
+      duration: 900,
+      ease: "Sine.easeInOut"
+    });
+
+    this.tweens.add({
+      targets: this.cloudShadowLayer,
+      alpha: isDusk ? 0.18 : 0.1,
       duration: 900,
       ease: "Sine.easeInOut"
     });
