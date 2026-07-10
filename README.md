@@ -20,6 +20,9 @@ The production-ready static site is written to `dist/`.
 Generated source PNGs that are not needed by the browser live under `art-source/` so
 they remain available for future art work without inflating the static deployment.
 
+The site uses staged loading: the title scene loads first, then the detailed campus
+layers load after the visitor chooses to enter the campus.
+
 ## Preview
 
 ```bash

@@ -72,7 +72,7 @@ export class TitleScene extends Phaser.Scene {
       .setDepth(12);
 
     start.on("pointerdown", () => {
-      this.scene.start("CampusScene");
+      this.scene.start("CampusPreloadScene");
     });
 
     this.scale.on("resize", this.restartForResize, this);
