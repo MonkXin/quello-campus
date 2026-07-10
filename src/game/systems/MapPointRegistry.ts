@@ -26,4 +26,8 @@ export class MapPointRegistry {
         .setDepth(81);
     });
   }
+
+  getPoints() {
+    return this.points;
+  }
 }

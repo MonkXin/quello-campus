@@ -48,6 +48,27 @@ export class CameraController {
     );
   }
 
+  glideTo(x: number, y: number) {
+    const targetScrollX = Phaser.Math.Clamp(
+      x - this.camera.displayWidth / 2,
+      0,
+      MAP_WIDTH - this.camera.displayWidth
+    );
+    const targetScrollY = Phaser.Math.Clamp(
+      y - this.camera.displayHeight / 2,
+      0,
+      MAP_HEIGHT - this.camera.displayHeight
+    );
+
+    this.scene.tweens.add({
+      targets: this.camera,
+      scrollX: targetScrollX,
+      scrollY: targetScrollY,
+      duration: 900,
+      ease: "Sine.easeInOut"
+    });
+  }
+
   private bindDragPan() {
     this.scene.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
       if (pointer.x < 150 && pointer.y > this.scene.scale.height - 160) {

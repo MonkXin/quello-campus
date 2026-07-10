@@ -47,6 +47,7 @@ export class AtmosphereController {
   togglePreset() {
     this.activeIndex = (this.activeIndex + 1) % this.presets.length;
     this.applyPreset();
+    return this.getActivePreset();
   }
 
   update(timeMs: number) {
@@ -56,6 +57,10 @@ export class AtmosphereController {
 
   getActiveLabel() {
     return this.presets[this.activeIndex]?.label ?? "Sunny";
+  }
+
+  getActivePreset() {
+    return this.presets[this.activeIndex];
   }
 
   private applyPreset() {

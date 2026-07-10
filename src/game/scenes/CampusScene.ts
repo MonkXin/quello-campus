@@ -6,6 +6,7 @@ import { CameraController } from "../systems/CameraController";
 import { InputController } from "../systems/InputController";
 import { MapPointRegistry } from "../systems/MapPointRegistry";
 import { ResponsiveViewport } from "../systems/ResponsiveViewport";
+import type { MapPoint } from "../types/content";
 
 interface JoystickState {
   base: Phaser.GameObjects.Arc;
@@ -26,7 +27,13 @@ export class CampusScene extends Phaser.Scene {
   private joystick?: JoystickState;
   private waterHighlights: Phaser.GameObjects.Ellipse[] = [];
   private waterLayer?: Phaser.GameObjects.Image;
+  private shadowLayer?: Phaser.GameObjects.Image;
   private duskLayer?: Phaser.GameObjects.Image;
+  private waterTween?: Phaser.Tweens.Tween;
+  private duskTween?: Phaser.Tweens.Tween;
+  private points: MapPoint[] = [];
+  private activePointIndex = -1;
+  private pointLabel?: Phaser.GameObjects.Text;
 
   constructor() {
     super("CampusScene");
@@ -43,6 +50,7 @@ export class CampusScene extends Phaser.Scene {
     this.audio = new AudioController(this);
 
     const points = new MapPointRegistry(this);
+    this.points = points.getPoints();
     if (new URLSearchParams(window.location.search).get("debugPoints") === "1") {
       points.renderDebugMarkers();
     } else {
@@ -92,11 +100,11 @@ export class CampusScene extends Phaser.Scene {
       .setDepth(8)
       .setBlendMode(Phaser.BlendModes.ADD);
 
-    this.add
+    this.shadowLayer = this.add
       .image(0, 0, "campus-shadows")
       .setOrigin(0)
       .setScale(MAP_SCALE)
-      .setAlpha(0.56)
+      .setAlpha(0.4)
       .setDepth(32)
       .setBlendMode(Phaser.BlendModes.MULTIPLY);
 
@@ -104,7 +112,7 @@ export class CampusScene extends Phaser.Scene {
       .image(0, 0, "campus-dusk-overlay")
       .setOrigin(0)
       .setScale(MAP_SCALE)
-      .setAlpha(0.38)
+      .setAlpha(0.16)
       .setDepth(92)
       .setBlendMode(Phaser.BlendModes.ADD);
 
@@ -114,18 +122,18 @@ export class CampusScene extends Phaser.Scene {
       .setScale(MAP_SCALE)
       .setDepth(112);
 
-    this.tweens.add({
+    this.waterTween = this.tweens.add({
       targets: this.waterLayer,
-      alpha: 0.72,
+      alpha: 0.58,
       duration: 2200,
       yoyo: true,
       repeat: -1,
       ease: "Sine.easeInOut"
     });
 
-    this.tweens.add({
+    this.duskTween = this.tweens.add({
       targets: this.duskLayer,
-      alpha: 0.52,
+      alpha: 0.24,
       duration: 5200,
       yoyo: true,
       repeat: -1,
@@ -359,14 +367,85 @@ export class CampusScene extends Phaser.Scene {
       padding: { x: 10, y: 7 }
     }).setInteractive({ useHandCursor: true });
 
+    this.pointLabel = ResponsiveViewport.createFixedHudText(this, 20, 132, "地点: 自由浏览", {
+      color: "#d8f0d8",
+      fontFamily: "Arial, sans-serif",
+      fontSize: "14px",
+      backgroundColor: "rgba(8, 20, 15, 0.42)",
+      padding: { x: 10, y: 7 }
+    }).setInteractive({ useHandCursor: true });
+
     switchButton.on("pointerdown", () => {
-      this.atmosphere?.togglePreset();
+      const preset = this.atmosphere?.togglePreset();
       this.atmosphereLabel?.setText(`天气: ${this.atmosphere?.getActiveLabel()}`);
+      if (preset) {
+        this.applyEnvironmentVisuals(preset.id);
+      }
     });
 
     this.muteLabel.on("pointerdown", () => {
       const muted = this.audio?.toggleMuted() ?? true;
       this.muteLabel?.setText(`声音: ${muted ? "关" : "开"}`);
+    });
+
+    this.pointLabel.on("pointerdown", () => this.focusNextPoint());
+  }
+
+  private focusNextPoint() {
+    if (!this.points.length) {
+      return;
+    }
+
+    this.activePointIndex = (this.activePointIndex + 1) % this.points.length;
+    const point = this.points[this.activePointIndex];
+    this.cameraController?.glideTo(point.x, point.y);
+    this.pointLabel?.setText(`地点: ${point.name}`);
+  }
+
+  private applyEnvironmentVisuals(presetId: "sunny" | "dusk") {
+    const isDusk = presetId === "dusk";
+    this.waterTween?.stop();
+    this.duskTween?.stop();
+
+    this.tweens.add({
+      targets: this.shadowLayer,
+      alpha: isDusk ? 0.62 : 0.4,
+      duration: 900,
+      ease: "Sine.easeInOut"
+    });
+
+    this.tweens.add({
+      targets: this.waterLayer,
+      alpha: isDusk ? 0.76 : 0.52,
+      duration: 900,
+      ease: "Sine.easeInOut",
+      onComplete: () => {
+        this.waterTween = this.tweens.add({
+          targets: this.waterLayer,
+          alpha: isDusk ? 0.84 : 0.58,
+          duration: isDusk ? 1800 : 2400,
+          yoyo: true,
+          repeat: -1,
+          ease: "Sine.easeInOut"
+        });
+      }
+    });
+
+    this.tweens.add({
+      targets: this.duskLayer,
+      alpha: isDusk ? 0.5 : 0.16,
+      duration: 900,
+      ease: "Sine.easeInOut",
+      onComplete: () => {
+        this.duskTween = this.tweens.add({
+          targets: this.duskLayer,
+          alpha: isDusk ? 0.62 : 0.24,
+          duration: isDusk ? 4300 : 5600,
+          yoyo: true,
+          repeat: -1,
+          ease: "Sine.easeInOut"
+        });
+      }
     });
   }
 
