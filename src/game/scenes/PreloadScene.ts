@@ -19,6 +19,14 @@ export class PreloadScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
+    this.add
+      .text(width / 2, height * 0.51, "正在铺开校园地图", {
+        color: "#adc7ad",
+        fontFamily: "Arial, sans-serif",
+        fontSize: "14px"
+      })
+      .setOrigin(0.5);
+
     const track = this.add.rectangle(x, y, barWidth, 6, 0xd7c49a, 0.22).setOrigin(0, 0.5);
     const fill = this.add.rectangle(x, y, 2, 6, 0xffd98a, 0.92).setOrigin(0, 0.5);
 
