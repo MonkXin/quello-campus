@@ -29,6 +29,7 @@ export class CampusScene extends Phaser.Scene {
   private waterLayer?: Phaser.GameObjects.Image;
   private shadowLayer?: Phaser.GameObjects.Image;
   private cloudShadowLayer?: Phaser.GameObjects.Image;
+  private duskDimLayer?: Phaser.GameObjects.Rectangle;
   private duskLayer?: Phaser.GameObjects.Image;
   private waterTween?: Phaser.Tweens.Tween;
   private duskTween?: Phaser.Tweens.Tween;
@@ -90,7 +91,7 @@ export class CampusScene extends Phaser.Scene {
       .image(0, 0, "campus-water")
       .setOrigin(0)
       .setScale(MAP_SCALE)
-      .setAlpha(0.52)
+      .setAlpha(0.62)
       .setDepth(8)
       .setBlendMode(Phaser.BlendModes.ADD);
 
@@ -98,7 +99,7 @@ export class CampusScene extends Phaser.Scene {
       .image(0, 0, "campus-shadows")
       .setOrigin(0)
       .setScale(MAP_SCALE)
-      .setAlpha(0.4)
+      .setAlpha(0.32)
       .setDepth(32)
       .setBlendMode(Phaser.BlendModes.MULTIPLY);
 
@@ -106,15 +107,21 @@ export class CampusScene extends Phaser.Scene {
       .image(MAP_WIDTH * 0.52, MAP_HEIGHT * 0.52, "campus-cloud-shadows")
       .setOrigin(0.5)
       .setScale(2.85)
-      .setAlpha(0.12)
+      .setAlpha(0.08)
       .setDepth(34)
+      .setBlendMode(Phaser.BlendModes.MULTIPLY);
+
+    this.duskDimLayer = this.add
+      .rectangle(0, 0, MAP_WIDTH, MAP_HEIGHT, 0x1f241d, 0)
+      .setOrigin(0)
+      .setDepth(88)
       .setBlendMode(Phaser.BlendModes.MULTIPLY);
 
     this.duskLayer = this.add
       .image(0, 0, "campus-dusk-overlay")
       .setOrigin(0)
       .setScale(MAP_SCALE)
-      .setAlpha(0.16)
+      .setAlpha(0.08)
       .setDepth(92)
       .setBlendMode(Phaser.BlendModes.ADD);
 
@@ -126,7 +133,7 @@ export class CampusScene extends Phaser.Scene {
 
     this.waterTween = this.tweens.add({
       targets: this.waterLayer,
-      alpha: 0.58,
+      alpha: 0.72,
       duration: 2200,
       yoyo: true,
       repeat: -1,
@@ -135,7 +142,7 @@ export class CampusScene extends Phaser.Scene {
 
     this.duskTween = this.tweens.add({
       targets: this.duskLayer,
-      alpha: 0.24,
+      alpha: 0.12,
       duration: 5200,
       yoyo: true,
       repeat: -1,
@@ -146,7 +153,7 @@ export class CampusScene extends Phaser.Scene {
       targets: this.cloudShadowLayer,
       x: MAP_WIDTH * 0.48,
       y: MAP_HEIGHT * 0.55,
-      alpha: 0.18,
+      alpha: 0.12,
       duration: 22000,
       yoyo: true,
       repeat: -1,
@@ -167,7 +174,7 @@ export class CampusScene extends Phaser.Scene {
       this,
       20,
       18,
-      "天气: Sunny",
+      "天气: 晴天",
       hudStyle
     );
 
@@ -268,27 +275,34 @@ export class CampusScene extends Phaser.Scene {
 
     this.tweens.add({
       targets: this.shadowLayer,
-      alpha: isDusk ? 0.62 : 0.4,
+      alpha: isDusk ? 0.58 : 0.32,
       duration: 900,
       ease: "Sine.easeInOut"
     });
 
     this.tweens.add({
       targets: this.cloudShadowLayer,
-      alpha: isDusk ? 0.18 : 0.1,
+      alpha: isDusk ? 0.16 : 0.08,
+      duration: 900,
+      ease: "Sine.easeInOut"
+    });
+
+    this.tweens.add({
+      targets: this.duskDimLayer,
+      alpha: isDusk ? 0.22 : 0,
       duration: 900,
       ease: "Sine.easeInOut"
     });
 
     this.tweens.add({
       targets: this.waterLayer,
-      alpha: isDusk ? 0.76 : 0.52,
+      alpha: isDusk ? 0.5 : 0.62,
       duration: 900,
       ease: "Sine.easeInOut",
       onComplete: () => {
         this.waterTween = this.tweens.add({
           targets: this.waterLayer,
-          alpha: isDusk ? 0.84 : 0.58,
+          alpha: isDusk ? 0.58 : 0.72,
           duration: isDusk ? 1800 : 2400,
           yoyo: true,
           repeat: -1,
@@ -299,13 +313,13 @@ export class CampusScene extends Phaser.Scene {
 
     this.tweens.add({
       targets: this.duskLayer,
-      alpha: isDusk ? 0.5 : 0.16,
+      alpha: isDusk ? 0.28 : 0.08,
       duration: 900,
       ease: "Sine.easeInOut",
       onComplete: () => {
         this.duskTween = this.tweens.add({
           targets: this.duskLayer,
-          alpha: isDusk ? 0.62 : 0.24,
+          alpha: isDusk ? 0.36 : 0.12,
           duration: isDusk ? 4300 : 5600,
           yoyo: true,
           repeat: -1,

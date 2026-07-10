@@ -3,7 +3,7 @@
   "presets": [
     {
       "id": "sunny",
-      "label": "Sunny",
+      "label": "晴天",
       "tint": "#ffffff",
       "shadowOpacity": 0.42,
       "particleSet": "leaf_light",
@@ -11,7 +11,7 @@
     },
     {
       "id": "dusk",
-      "label": "Dusk",
+      "label": "黄昏",
       "tint": "#ffd6a0",
       "shadowOpacity": 0.58,
       "particleSet": "leaf_warm",

@@ -17,7 +17,7 @@ export class AtmosphereController {
       this.presets.findIndex((preset) => preset.id === config.defaultPreset)
     );
 
-    this.overlay = scene.add.rectangle(0, 0, MAP_WIDTH, MAP_HEIGHT, 0xffffff, 0.06);
+    this.overlay = scene.add.rectangle(0, 0, MAP_WIDTH, MAP_HEIGHT, 0xffffff, 0.04);
     this.overlay.setOrigin(0);
     this.overlay.setDepth(90);
     this.overlay.setBlendMode(Phaser.BlendModes.ADD);
@@ -67,7 +67,7 @@ export class AtmosphereController {
   private applyPreset() {
     const preset = this.presets[this.activeIndex];
     const color = Phaser.Display.Color.HexStringToColor(preset.tint).color;
-    this.overlay.setFillStyle(color, preset.id === "dusk" ? 0.16 : 0.06);
+    this.overlay.setFillStyle(color, preset.id === "dusk" ? 0.045 : 0.055);
     this.cloudShadow.setAlpha(preset.shadowOpacity * 0.32);
   }
 
