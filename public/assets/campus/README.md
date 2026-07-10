@@ -25,3 +25,15 @@ The current implementation now uses the first generated layered map set:
 Important: the source images supplied on 2026-07-10 were RGB PNGs with checkerboard backgrounds baked into the pixels. The runtime layers here were automatically converted into RGBA for integration. For the public-quality pass, export true transparent PNGs directly from the image tool or design file.
 
 If the generated source still contains a baked checkerboard, run `scripts/process-campus-layers.py` from the project root.
+
+## Title Canopy Frame
+
+The generated square canopy frame from 2026-07-10 is integrated as `../ui/title-canopy-frame.png` for the title screen only.
+
+Reason:
+
+- it has a strong foreground-framing feel for the entry screen;
+- it is square and does not match the 16:9 authored campus map composition;
+- it cannot replace `map/foreground-canopy.png`, which must stay aligned to the full campus map canvas.
+
+For a future runtime map canopy replacement, generate a same-size layer that exactly matches the main map canvas and origin.

@@ -61,6 +61,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image("campus-dusk-overlay", "assets/campus/atmosphere/dusk-overlay.png");
     this.load.image("campus-cloud-shadows", "assets/campus/atmosphere/cloud-shadows.png");
     this.load.image("quello-campus-title", "assets/ui/quello-campus-title.png");
+    this.load.image("title-canopy-frame", "assets/ui/title-canopy-frame.png");
     this.load.spritesheet("leaf-particles", "assets/campus/particles/leaves-petals.png", {
       frameWidth: 313,
       frameHeight: 627
