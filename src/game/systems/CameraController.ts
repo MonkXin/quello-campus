@@ -6,6 +6,9 @@ export class CameraController {
   private readonly camera: Phaser.Cameras.Scene2D.Camera;
   private speed = 260;
   private readonly followsTarget: boolean;
+  private followOffsetX = 0;
+  private followOffsetY = 0;
+  private baseFollowOffsetY = 0;
   private dragPointerId: number | null = null;
   private lastDragX = 0;
   private lastDragY = 0;
@@ -34,10 +37,20 @@ export class CameraController {
     const zoom = isPortrait ? 0.78 : 0.92;
 
     this.camera.setZoom(Math.min(1, Math.max(0.68, zoom)));
+    this.baseFollowOffsetY = -height * (isPortrait ? 0.1 : 0.14);
   }
 
   update(deltaMs: number) {
     if (this.followsTarget) {
+      const movement = this.input.getMovementVector();
+      const damping = 1 - Math.pow(0.001, deltaMs / 1000);
+      this.followOffsetX = Phaser.Math.Linear(this.followOffsetX, movement.x * 90, damping);
+      this.followOffsetY = Phaser.Math.Linear(
+        this.followOffsetY,
+        this.baseFollowOffsetY + movement.y * 58,
+        damping
+      );
+      this.camera.setFollowOffset(this.followOffsetX, this.followOffsetY);
       return;
     }
     const movement = this.input.getMovementVector();

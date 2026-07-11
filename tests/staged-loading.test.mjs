@@ -59,6 +59,14 @@ test("the route canopy is staged and moves as a foreground parallax layer", () =
   assert.match(campusSource, /foregroundCanopy\.setPosition/);
 });
 
+test("the follow camera keeps the explorer low in frame and looks ahead", () => {
+  assert.match(cameraSource, /baseFollowOffsetY/);
+  assert.match(cameraSource, /Phaser\.Math\.Linear/);
+  assert.match(cameraSource, /setFollowOffset/);
+  assert.match(cameraSource, /movement\.x \* 90/);
+  assert.match(cameraSource, /movement\.y \* 58/);
+});
+
 test("entering from the title loads campus detail assets before starting the campus", () => {
   assert.ok(campusPreloadSource, "CampusPreloadScene must exist");
   assert.match(titleSource, /this\.scene\.start\("CampusPreloadScene"\)/);
