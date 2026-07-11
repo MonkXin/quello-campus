@@ -49,8 +49,8 @@ test("follow mode uses a four-direction animated character sheet", () => {
 });
 
 test("the explorer spawns on the plaza and treats the water alpha as collision", () => {
-  assert.match(playerSource, /const SPAWN_X = 838 \* 2/);
-  assert.match(playerSource, /const SPAWN_Y = 307 \* 2/);
+  assert.match(playerSource, /const SPAWN_X = 500 \* 2/);
+  assert.match(playerSource, /const SPAWN_Y = 510 \* 2/);
   assert.match(playerSource, /textures\.getPixel\(sourceX, sourceY, "campus-water"\)/);
   assert.match(playerSource, /pixel\.alpha < 24/);
   assert.match(playerSource, /"campus-base"/);
@@ -83,7 +83,8 @@ test("the follow camera keeps the explorer low in frame and looks ahead", () => 
   assert.match(cameraSource, /baseFollowOffsetY/);
   assert.match(cameraSource, /Phaser\.Math\.Linear/);
   assert.match(cameraSource, /setFollowOffset/);
-  assert.match(cameraSource, /movement\.x \* 90/);
+  assert.match(cameraSource, /movement\.x \* this\.lookAheadX/);
+  assert.match(cameraSource, /this\.lookAheadX = isPortrait \? 28 : 90/);
   assert.match(cameraSource, /movement\.y \* 58/);
   assert.match(cameraSource, /baseFollowOffsetY = -height \*/);
 });
@@ -96,7 +97,7 @@ test("tour mode follows an authored route while preserving manual input priority
   assert.match(routeControllerSource, /hasManualInput/);
   assert.doesNotMatch(routeSource, /92 \* 2/);
   assert.doesNotMatch(routeSource, /650 \* 2/);
-  assert.match(routeSource, /950 \* 2, y: 300 \* 2/);
+  assert.match(routeSource, /220 \* 2, y: 510 \* 2/);
 });
 
 test("the atmosphere combines drifting particles, sun patches, and wind streaks", () => {

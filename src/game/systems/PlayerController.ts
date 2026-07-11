@@ -3,8 +3,8 @@ import { MAP_HEIGHT, MAP_WIDTH } from "../config";
 import { CAMPUS_BUILDING_COLLISIONS, circleIntersectsRect } from "../data/campusCollision";
 import type { InputController } from "./InputController";
 
-const SPAWN_X = 838 * 2;
-const SPAWN_Y = 307 * 2;
+const SPAWN_X = 500 * 2;
+const SPAWN_Y = 510 * 2;
 const COLLISION_RADIUS = 18;
 
 export class PlayerController {
