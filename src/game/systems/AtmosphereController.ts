@@ -8,6 +8,8 @@ export class AtmosphereController {
   private overlay: Phaser.GameObjects.Rectangle;
   private cloudShadow: Phaser.GameObjects.Ellipse;
   private particles: Phaser.GameObjects.Particles.ParticleEmitter;
+  private sunPatches: Phaser.GameObjects.Ellipse[] = [];
+  private windStreaks: Phaser.GameObjects.Rectangle[] = [];
 
   constructor(private readonly scene: Phaser.Scene) {
     const config = scene.cache.json.get("events") as EnvironmentConfig;
@@ -41,6 +43,8 @@ export class AtmosphereController {
       quantity: 1
     });
     this.particles.setDepth(95);
+    this.createSunPatches();
+    this.createWindStreaks();
 
     this.applyPreset();
   }
@@ -54,6 +58,20 @@ export class AtmosphereController {
   update(timeMs: number) {
     this.cloudShadow.x = MAP_WIDTH * 0.48 + Math.sin(timeMs / 6800) * 82;
     this.cloudShadow.y = MAP_HEIGHT * 0.34 + Math.cos(timeMs / 7800) * 36;
+    this.sunPatches.forEach((patch, index) => {
+      patch.x += Math.sin(timeMs / 2600 + index * 1.7) * 0.22;
+      patch.y += Math.cos(timeMs / 3100 + index) * 0.12;
+      patch.setAlpha(0.045 + Math.sin(timeMs / 1700 + index) * 0.018);
+    });
+    this.windStreaks.forEach((streak, index) => {
+      streak.x += 0.38 + index * 0.035;
+      streak.y += 0.12;
+      streak.setAlpha(0.08 + Math.sin(timeMs / 900 + index) * 0.035);
+      if (streak.x > this.scene.scale.width + 120) {
+        streak.x = -120;
+        streak.y = (streak.y + 97) % this.scene.scale.height;
+      }
+    });
   }
 
   getActiveLabel() {
@@ -95,5 +113,39 @@ export class AtmosphereController {
     graphics.destroy();
 
     return key;
+  }
+
+  private createSunPatches() {
+    const positions = [
+      [MAP_WIDTH * 0.24, MAP_HEIGHT * 0.24, 280, 94],
+      [MAP_WIDTH * 0.56, MAP_HEIGHT * 0.42, 360, 112],
+      [MAP_WIDTH * 0.76, MAP_HEIGHT * 0.68, 250, 82]
+    ];
+    this.sunPatches = positions.map(([x, y, width, height]) =>
+      this.scene.add
+        .ellipse(x, y, width, height, 0xffefae, 0.055)
+        .setAngle(-18)
+        .setDepth(72)
+        .setBlendMode(Phaser.BlendModes.ADD)
+    );
+  }
+
+  private createWindStreaks() {
+    this.windStreaks = Array.from({ length: 7 }, (_, index) =>
+      this.scene.add
+        .rectangle(
+          (this.scene.scale.width / 7) * index,
+          90 + ((index * 113) % Math.max(180, this.scene.scale.height - 180)),
+          58 + index * 8,
+          2,
+          0xd9f5c9,
+          0.1
+        )
+        .setOrigin(0.5)
+        .setAngle(16)
+        .setScrollFactor(0)
+        .setDepth(148)
+        .setBlendMode(Phaser.BlendModes.ADD)
+    );
   }
 }

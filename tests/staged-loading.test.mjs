@@ -17,6 +17,10 @@ const routeSource = existsSync(routeUrl) ? readFileSync(routeUrl, "utf8") : "";
 const routeControllerSource = existsSync(routeControllerUrl)
   ? readFileSync(routeControllerUrl, "utf8")
   : "";
+const atmosphereSource = readFileSync(
+  new URL("../src/game/systems/AtmosphereController.ts", import.meta.url),
+  "utf8"
+);
 
 test("initial preload only loads assets required by the title scene", () => {
   assert.match(preloadSource, /campus-base/);
@@ -79,6 +83,14 @@ test("tour mode follows an authored route while preserving manual input priority
   assert.match(routeSource, /CAMPUS_TOUR_ROUTE/);
   assert.match(routeControllerSource, /setAutopilotVector/);
   assert.match(routeControllerSource, /hasManualInput/);
+});
+
+test("the atmosphere combines drifting particles, sun patches, and wind streaks", () => {
+  assert.match(atmosphereSource, /createSunPatches/);
+  assert.match(atmosphereSource, /createWindStreaks/);
+  assert.match(atmosphereSource, /sunPatches/);
+  assert.match(atmosphereSource, /windStreaks/);
+  assert.match(atmosphereSource, /BlendModes\.ADD/);
 });
 
 test("entering from the title loads campus detail assets before starting the campus", () => {
