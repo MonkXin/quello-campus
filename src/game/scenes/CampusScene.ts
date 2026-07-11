@@ -3,6 +3,7 @@ import { MAP_HEIGHT, MAP_SCALE, MAP_WIDTH } from "../config";
 import { AtmosphereController } from "../systems/AtmosphereController";
 import { AudioController } from "../systems/AudioController";
 import { CameraController } from "../systems/CameraController";
+import { CinematicPostFX } from "../systems/CinematicPostFX";
 import { InputController } from "../systems/InputController";
 import { MapPointRegistry } from "../systems/MapPointRegistry";
 import { PlayerController } from "../systems/PlayerController";
@@ -55,6 +56,7 @@ export class CampusScene extends Phaser.Scene {
 
     this.createCampusArtLayers();
     this.createForegroundCanopy();
+    new CinematicPostFX(this);
 
     this.inputController = new InputController(this);
     this.observerMode = new URLSearchParams(window.location.search).get("observerMode") === "1";

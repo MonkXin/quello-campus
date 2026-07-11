@@ -21,6 +21,8 @@ const atmosphereSource = readFileSync(
   new URL("../src/game/systems/AtmosphereController.ts", import.meta.url),
   "utf8"
 );
+const postFxUrl = new URL("../src/game/systems/CinematicPostFX.ts", import.meta.url);
+const postFxSource = existsSync(postFxUrl) ? readFileSync(postFxUrl, "utf8") : "";
 
 test("initial preload only loads assets required by the title scene", () => {
   assert.match(preloadSource, /campus-base/);
@@ -91,6 +93,14 @@ test("the atmosphere combines drifting particles, sun patches, and wind streaks"
   assert.match(atmosphereSource, /sunPatches/);
   assert.match(atmosphereSource, /windStreaks/);
   assert.match(atmosphereSource, /BlendModes\.ADD/);
+});
+
+test("cinematic post processing adds restrained depth with reduced-motion fallback", () => {
+  assert.match(campusSource, /new CinematicPostFX/);
+  assert.match(postFxSource, /prefers-reduced-motion/);
+  assert.match(postFxSource, /createVignette/);
+  assert.match(postFxSource, /createHighlightBloom/);
+  assert.match(postFxSource, /setScrollFactor\(0\)/);
 });
 
 test("entering from the title loads campus detail assets before starting the campus", () => {
