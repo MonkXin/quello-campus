@@ -8,7 +8,7 @@ from PIL import Image
 
 
 def is_checker(pixel: tuple[int, int, int]) -> bool:
-    return max(pixel) - min(pixel) <= 18 and min(pixel) >= 228
+    return max(pixel) - min(pixel) <= 30 and min(pixel) >= 150
 
 
 def main() -> None:

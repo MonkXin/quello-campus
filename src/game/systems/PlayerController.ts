@@ -17,8 +17,8 @@ export class PlayerController {
     scene: Phaser.Scene,
     private readonly input: InputController
   ) {
-    const shadow = scene.add.ellipse(0, 39, 50, 18, 0x07110d, 0.3);
-    this.sprite = scene.add.sprite(0, 0, "student-walk", 0).setScale(0.78);
+    const shadow = scene.add.ellipse(0, 47, 58, 20, 0x07110d, 0.3);
+    this.sprite = scene.add.sprite(0, 0, "student-walk", 0).setScale(0.96);
     this.createAnimations(scene);
 
     this.avatar = scene.add.container(SPAWN_X, SPAWN_Y, [shadow, this.sprite]);

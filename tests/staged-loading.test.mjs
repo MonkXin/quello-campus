@@ -45,6 +45,7 @@ test("follow mode uses a four-direction animated character sheet", () => {
   assert.match(campusPreloadSource, /frameWidth: 128/);
   assert.match(playerSource, /student-walk-\$\{this\.facing\}/);
   assert.match(playerSource, /down: 0, left: 4, right: 8, up: 12/);
+  assert.match(playerSource, /setScale\(0\.96\)/);
 });
 
 test("the explorer spawns on the plaza and treats the water alpha as collision", () => {
@@ -82,6 +83,7 @@ test("the follow camera keeps the explorer low in frame and looks ahead", () => 
   assert.match(cameraSource, /setFollowOffset/);
   assert.match(cameraSource, /movement\.x \* 90/);
   assert.match(cameraSource, /movement\.y \* 58/);
+  assert.match(cameraSource, /baseFollowOffsetY = -height \*/);
 });
 
 test("tour mode follows an authored route while preserving manual input priority", () => {
@@ -90,6 +92,8 @@ test("tour mode follows an authored route while preserving manual input priority
   assert.match(routeSource, /CAMPUS_TOUR_ROUTE/);
   assert.match(routeControllerSource, /setAutopilotVector/);
   assert.match(routeControllerSource, /hasManualInput/);
+  assert.doesNotMatch(routeSource, /92 \* 2/);
+  assert.match(routeSource, /650 \* 2/);
 });
 
 test("the atmosphere combines drifting particles, sun patches, and wind streaks", () => {
