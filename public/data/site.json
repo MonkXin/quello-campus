@@ -3,6 +3,6 @@
   "subtitle": "一座正在醒来的像素校园",
   "startLabel": "进入校园",
   "loadingLabel": "正在铺开校园地图",
-  "controlHint": "拖动画面或使用 WASD / 方向键慢慢浏览校园",
-  "titleHint": "拖动画面 / WASD / 方向键 / 屏幕摇杆"
+  "controlHint": "使用 WASD / 方向键或屏幕摇杆带角色探索校园",
+  "titleHint": "WASD / 方向键 / 屏幕摇杆"
 }

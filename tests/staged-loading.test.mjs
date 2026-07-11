@@ -20,8 +20,9 @@ test("initial preload only loads assets required by the title scene", () => {
   assert.doesNotMatch(preloadSource, /campus-canopy/);
 });
 
-test("experimental follow mode is opt-in and uses camera smoothing", () => {
-  assert.match(campusSource, /get\("followMode"\) === "1"/);
+test("character follow mode is the default and observer mode stays opt-in", () => {
+  assert.match(campusSource, /get\("observerMode"\) === "1"/);
+  assert.match(campusSource, /if \(!this\.observerMode\)/);
   assert.match(campusSource, /new PlayerController/);
   assert.match(cameraSource, /startFollow\(followTarget, true, 0\.09, 0\.09\)/);
 });

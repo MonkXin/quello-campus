@@ -33,12 +33,12 @@ Open `http://localhost:5174/`.
 
 ## Experience Controls
 
-- Drag / WASD / arrow keys: browse the campus.
+- WASD / arrow keys / screen joystick: move the student explorer.
 - `T`: switch sunny / dusk.
 - `M`: toggle ambient audio.
 - `N`: focus the next future pet spot.
 - `?debugPoints=1`: show point names and radii.
-- `?followMode=1`: preview the Phase 2 character-follow camera with a temporary marker.
+- `?observerMode=1`: return to the original free-camera observer mode.
 
 ## Standalone Site
 

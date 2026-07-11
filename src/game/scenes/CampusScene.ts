@@ -40,6 +40,7 @@ export class CampusScene extends Phaser.Scene {
   private pointLabel?: Phaser.GameObjects.Text;
   private site?: SiteConfig;
   private hudItems: Phaser.GameObjects.Text[] = [];
+  private observerMode = false;
 
   constructor() {
     super("CampusScene");
@@ -52,8 +53,8 @@ export class CampusScene extends Phaser.Scene {
     this.createCampusArtLayers();
 
     this.inputController = new InputController(this);
-    const followMode = new URLSearchParams(window.location.search).get("followMode") === "1";
-    if (followMode) {
+    this.observerMode = new URLSearchParams(window.location.search).get("observerMode") === "1";
+    if (!this.observerMode) {
       this.playerController = new PlayerController(this, this.inputController);
     }
     this.cameraController = new CameraController(
@@ -205,13 +206,23 @@ export class CampusScene extends Phaser.Scene {
       padding: { x: 10, y: 7 }
     }).setInteractive({ useHandCursor: true });
 
-    this.pointLabel = ResponsiveViewport.createFixedHudText(this, 20, 132, "地点: 自由浏览", {
+    this.pointLabel = ResponsiveViewport.createFixedHudText(
+      this,
+      20,
+      132,
+      this.observerMode ? "地点: 自由浏览" : "探索: 角色跟随",
+      {
       color: "#d8f0d8",
       fontFamily: "Arial, sans-serif",
       fontSize: "14px",
       backgroundColor: "rgba(8, 20, 15, 0.42)",
       padding: { x: 10, y: 7 }
-    }).setInteractive({ useHandCursor: true });
+      }
+    );
+
+    if (this.observerMode) {
+      this.pointLabel.setInteractive({ useHandCursor: true });
+    }
 
     this.hudItems = [this.atmosphereLabel, switchButton, this.muteLabel, this.pointLabel];
     this.layoutHud();
@@ -225,7 +236,9 @@ export class CampusScene extends Phaser.Scene {
       this.muteLabel?.setText(`声音: ${muted ? "关" : "开"}`);
     });
 
-    this.pointLabel.on("pointerdown", () => this.focusNextPoint());
+    if (this.observerMode) {
+      this.pointLabel.on("pointerdown", () => this.focusNextPoint());
+    }
   }
 
   private bindPresenterKeys() {
@@ -240,7 +253,9 @@ export class CampusScene extends Phaser.Scene {
       const muted = this.audio?.toggleMuted() ?? true;
       this.muteLabel?.setText(`声音: ${muted ? "关" : "开"}`);
     });
-    keyboard.on("keydown-N", () => this.focusNextPoint());
+    if (this.observerMode) {
+      keyboard.on("keydown-N", () => this.focusNextPoint());
+    }
   }
 
   private toggleEnvironment() {
@@ -345,7 +360,9 @@ export class CampusScene extends Phaser.Scene {
       this,
       this.scale.width / 2,
       this.scale.height - 42,
-      this.site?.controlHint ?? "拖动画面或使用 WASD / 方向键慢慢浏览校园",
+      this.observerMode
+        ? "拖动画面或使用 WASD / 方向键慢慢浏览校园"
+        : "使用 WASD / 方向键或屏幕摇杆带角色探索校园",
       {
         color: "#fff6d6",
         fontFamily: "Arial, sans-serif",
