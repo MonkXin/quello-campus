@@ -34,6 +34,15 @@ test("follow mode uses a four-direction animated character sheet", () => {
   assert.match(playerSource, /down: 0, left: 4, right: 8, up: 12/);
 });
 
+test("the explorer spawns on the plaza and treats the water alpha as collision", () => {
+  assert.match(playerSource, /const SPAWN_X = 838 \* 2/);
+  assert.match(playerSource, /const SPAWN_Y = 307 \* 2/);
+  assert.match(playerSource, /textures\.getPixel\(sourceX, sourceY, "campus-water"\)/);
+  assert.match(playerSource, /pixel\.alpha < 24/);
+  assert.match(playerSource, /canOccupy\(nextX, this\.avatar\.y\)/);
+  assert.match(playerSource, /canOccupy\(this\.avatar\.x, nextY\)/);
+});
+
 test("entering from the title loads campus detail assets before starting the campus", () => {
   assert.ok(campusPreloadSource, "CampusPreloadScene must exist");
   assert.match(titleSource, /this\.scene\.start\("CampusPreloadScene"\)/);
