@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { MAP_HEIGHT, MAP_WIDTH } from "../config";
+import { CAMPUS_BUILDING_COLLISIONS, circleIntersectsRect } from "../data/campusCollision";
 import type { InputController } from "./InputController";
 
 const SPAWN_X = 838 * 2;
@@ -22,6 +23,10 @@ export class PlayerController {
 
     this.avatar = scene.add.container(SPAWN_X, SPAWN_Y, [shadow, this.sprite]);
     this.avatar.setDepth(80);
+
+    if (new URLSearchParams(window.location.search).get("debugCollision") === "1") {
+      this.renderCollisionDebug(scene);
+    }
   }
 
   update(deltaMs: number) {
@@ -71,6 +76,17 @@ export class PlayerController {
   }
 
   private canOccupy(worldX: number, worldY: number): boolean {
+    const sourceWorldX = worldX / 2;
+    const sourceWorldY = worldY / 2;
+    const sourceRadius = COLLISION_RADIUS / 2;
+    if (
+      CAMPUS_BUILDING_COLLISIONS.some((rect) =>
+        circleIntersectsRect(sourceWorldX, sourceWorldY, sourceRadius, rect)
+      )
+    ) {
+      return false;
+    }
+
     const samples = [
       [0, 0],
       [-COLLISION_RADIUS, 0],
@@ -84,6 +100,16 @@ export class PlayerController {
       const sourceY = Math.round((worldY + offsetY) / 2);
       const pixel = this.avatar.scene.textures.getPixel(sourceX, sourceY, "campus-water");
       return !pixel || pixel.alpha < 24;
+    });
+  }
+
+  private renderCollisionDebug(scene: Phaser.Scene) {
+    CAMPUS_BUILDING_COLLISIONS.forEach((rect) => {
+      scene.add
+        .rectangle(rect.x * 2, rect.y * 2, rect.width * 2, rect.height * 2, 0xff466d, 0.2)
+        .setOrigin(0)
+        .setStrokeStyle(3, 0xff8ca2, 0.85)
+        .setDepth(180);
     });
   }
 }

@@ -10,6 +10,7 @@ const mainSource = readFileSync(new URL("../src/main.ts", import.meta.url), "utf
 const campusSource = readFileSync(new URL("../src/game/scenes/CampusScene.ts", import.meta.url), "utf8");
 const cameraSource = readFileSync(new URL("../src/game/systems/CameraController.ts", import.meta.url), "utf8");
 const playerSource = readFileSync(new URL("../src/game/systems/PlayerController.ts", import.meta.url), "utf8");
+const collisionSource = readFileSync(new URL("../src/game/data/campusCollision.ts", import.meta.url), "utf8");
 
 test("initial preload only loads assets required by the title scene", () => {
   assert.match(preloadSource, /campus-base/);
@@ -41,6 +42,13 @@ test("the explorer spawns on the plaza and treats the water alpha as collision",
   assert.match(playerSource, /pixel\.alpha < 24/);
   assert.match(playerSource, /canOccupy\(nextX, this\.avatar\.y\)/);
   assert.match(playerSource, /canOccupy\(this\.avatar\.x, nextY\)/);
+});
+
+test("major campus buildings use data-driven collision zones", () => {
+  assert.match(collisionSource, /CAMPUS_BUILDING_COLLISIONS/);
+  assert.match(collisionSource, /circleIntersectsRect/);
+  assert.match(playerSource, /CAMPUS_BUILDING_COLLISIONS\.some/);
+  assert.match(playerSource, /get\("debugCollision"\) === "1"/);
 });
 
 test("entering from the title loads campus detail assets before starting the campus", () => {

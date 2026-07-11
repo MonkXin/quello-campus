@@ -38,6 +38,7 @@ Open `http://localhost:5174/`.
 - `M`: toggle ambient audio.
 - `N`: focus the next future pet spot.
 - `?debugPoints=1`: show point names and radii.
+- `?debugCollision=1`: show major-building collision rectangles.
 - `?observerMode=1`: return to the original free-camera observer mode.
 
 ## Standalone Site
