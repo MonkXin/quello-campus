@@ -33,6 +33,7 @@ export class CampusScene extends Phaser.Scene {
   private cloudShadowLayer?: Phaser.GameObjects.Image;
   private duskDimLayer?: Phaser.GameObjects.Rectangle;
   private duskLayer?: Phaser.GameObjects.Image;
+  private foregroundCanopy?: Phaser.GameObjects.Image;
   private waterTween?: Phaser.Tweens.Tween;
   private duskTween?: Phaser.Tweens.Tween;
   private points: MapPoint[] = [];
@@ -51,6 +52,7 @@ export class CampusScene extends Phaser.Scene {
     this.site = this.cache.json.get("site") as SiteConfig;
 
     this.createCampusArtLayers();
+    this.createForegroundCanopy();
 
     this.inputController = new InputController(this);
     this.observerMode = new URLSearchParams(window.location.search).get("observerMode") === "1";
@@ -82,6 +84,7 @@ export class CampusScene extends Phaser.Scene {
       this.cameraController?.resize();
       this.layoutHud();
       this.positionJoystick();
+      this.layoutForegroundCanopy();
     });
   }
 
@@ -89,6 +92,15 @@ export class CampusScene extends Phaser.Scene {
     this.cameraController?.update(delta);
     this.playerController?.update(delta);
     this.atmosphere?.update(time);
+    if (this.foregroundCanopy) {
+      const camera = this.cameras.main;
+      const parallaxX = (camera.scrollX + camera.displayWidth / 2 - MAP_WIDTH / 2) * -0.014;
+      const parallaxY = (camera.scrollY + camera.displayHeight / 2 - MAP_HEIGHT / 2) * -0.01;
+      this.foregroundCanopy.setPosition(
+        this.scale.width / 2 + parallaxX + Math.sin(time / 3600) * 4,
+        this.scale.height / 2 + parallaxY + Math.cos(time / 4200) * 3
+      );
+    }
 
     this.waterHighlights.forEach((highlight, index) => {
       highlight.setAlpha(0.12 + Math.sin(time / 900 + index) * 0.05);
@@ -171,6 +183,27 @@ export class CampusScene extends Phaser.Scene {
       repeat: -1,
       ease: "Sine.easeInOut"
     });
+  }
+
+  private createForegroundCanopy() {
+    this.foregroundCanopy = this.add
+      .image(this.scale.width / 2, this.scale.height / 2, "route-canopy")
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(150)
+      .setAlpha(0.94);
+    this.layoutForegroundCanopy();
+  }
+
+  private layoutForegroundCanopy() {
+    if (!this.foregroundCanopy) {
+      return;
+    }
+    const coverScale = Math.max(
+      this.scale.width / this.foregroundCanopy.width,
+      this.scale.height / this.foregroundCanopy.height
+    );
+    this.foregroundCanopy.setScale(coverScale * 1.04);
   }
 
   private createHud() {

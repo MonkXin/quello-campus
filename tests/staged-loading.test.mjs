@@ -51,6 +51,14 @@ test("major campus buildings use data-driven collision zones", () => {
   assert.match(playerSource, /get\("debugCollision"\) === "1"/);
 });
 
+test("the route canopy is staged and moves as a foreground parallax layer", () => {
+  assert.match(campusPreloadSource, /"route-canopy"/);
+  assert.match(campusPreloadSource, /foreground\/route-canopy\.png/);
+  assert.match(campusSource, /createForegroundCanopy/);
+  assert.match(campusSource, /setScrollFactor\(0\)/);
+  assert.match(campusSource, /foregroundCanopy\.setPosition/);
+});
+
 test("entering from the title loads campus detail assets before starting the campus", () => {
   assert.ok(campusPreloadSource, "CampusPreloadScene must exist");
   assert.match(titleSource, /this\.scene\.start\("CampusPreloadScene"\)/);
