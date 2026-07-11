@@ -99,7 +99,14 @@ export class PlayerController {
       const sourceX = Math.round((worldX + offsetX) / 2);
       const sourceY = Math.round((worldY + offsetY) / 2);
       const pixel = this.avatar.scene.textures.getPixel(sourceX, sourceY, "campus-water");
-      return !pixel || pixel.alpha < 24;
+      const basePixel = this.avatar.scene.textures.getPixel(sourceX, sourceY, "campus-base");
+      const baseLooksLikeWater = Boolean(
+        basePixel &&
+          basePixel.blue > 90 &&
+          basePixel.blue > basePixel.red * 1.25 &&
+          basePixel.blue > basePixel.green * 1.08
+      );
+      return (!pixel || pixel.alpha < 24) && !baseLooksLikeWater;
     });
   }
 

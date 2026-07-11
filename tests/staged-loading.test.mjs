@@ -53,6 +53,8 @@ test("the explorer spawns on the plaza and treats the water alpha as collision",
   assert.match(playerSource, /const SPAWN_Y = 307 \* 2/);
   assert.match(playerSource, /textures\.getPixel\(sourceX, sourceY, "campus-water"\)/);
   assert.match(playerSource, /pixel\.alpha < 24/);
+  assert.match(playerSource, /"campus-base"/);
+  assert.match(playerSource, /basePixel\.blue > basePixel\.green \* 1\.08/);
   assert.match(playerSource, /canOccupy\(nextX, this\.avatar\.y\)/);
   assert.match(playerSource, /canOccupy\(this\.avatar\.x, nextY\)/);
 });
@@ -93,7 +95,8 @@ test("tour mode follows an authored route while preserving manual input priority
   assert.match(routeControllerSource, /setAutopilotVector/);
   assert.match(routeControllerSource, /hasManualInput/);
   assert.doesNotMatch(routeSource, /92 \* 2/);
-  assert.match(routeSource, /650 \* 2/);
+  assert.doesNotMatch(routeSource, /650 \* 2/);
+  assert.match(routeSource, /950 \* 2, y: 300 \* 2/);
 });
 
 test("the atmosphere combines drifting particles, sun patches, and wind streaks", () => {
