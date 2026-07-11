@@ -7,6 +7,7 @@ import { InputController } from "../systems/InputController";
 import { MapPointRegistry } from "../systems/MapPointRegistry";
 import { PlayerController } from "../systems/PlayerController";
 import { ResponsiveViewport } from "../systems/ResponsiveViewport";
+import { RouteController } from "../systems/RouteController";
 import type { MapPoint, SiteConfig } from "../types/content";
 
 interface JoystickState {
@@ -22,6 +23,7 @@ export class CampusScene extends Phaser.Scene {
   private inputController?: InputController;
   private cameraController?: CameraController;
   private playerController?: PlayerController;
+  private routeController?: RouteController;
   private atmosphere?: AtmosphereController;
   private audio?: AudioController;
   private atmosphereLabel?: Phaser.GameObjects.Text;
@@ -58,6 +60,9 @@ export class CampusScene extends Phaser.Scene {
     this.observerMode = new URLSearchParams(window.location.search).get("observerMode") === "1";
     if (!this.observerMode) {
       this.playerController = new PlayerController(this, this.inputController);
+      if (new URLSearchParams(window.location.search).get("tourMode") === "1") {
+        this.routeController = new RouteController(this.inputController, this.playerController.avatar);
+      }
     }
     this.cameraController = new CameraController(
       this,
@@ -89,6 +94,7 @@ export class CampusScene extends Phaser.Scene {
   }
 
   update(time: number, delta: number) {
+    this.routeController?.update();
     this.cameraController?.update(delta);
     this.playerController?.update(delta);
     this.atmosphere?.update(time);

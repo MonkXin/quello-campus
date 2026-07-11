@@ -9,6 +9,7 @@ export class InputController {
   private readonly cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private readonly keys: Record<"w" | "a" | "s" | "d", Phaser.Input.Keyboard.Key>;
   private joystickVector: InputVector = { x: 0, y: 0 };
+  private autopilotVector: InputVector = { x: 0, y: 0 };
 
   constructor(private readonly scene: Phaser.Scene) {
     const keyboard = scene.input.keyboard;
@@ -30,7 +31,29 @@ export class InputController {
     this.joystickVector = vector;
   }
 
+  setAutopilotVector(vector: InputVector) {
+    this.autopilotVector = vector;
+  }
+
+  hasManualInput(): boolean {
+    return Math.hypot(this.getManualVector().x, this.getManualVector().y) > 0.05;
+  }
+
   getMovementVector(): InputVector {
+    const manual = this.getManualVector();
+    const vector = Math.hypot(manual.x, manual.y) > 0.05 ? manual : { ...this.autopilotVector };
+
+    const length = Math.hypot(vector.x, vector.y);
+
+    if (length > 1) {
+      vector.x /= length;
+      vector.y /= length;
+    }
+
+    return vector;
+  }
+
+  private getManualVector(): InputVector {
     const vector = { ...this.joystickVector };
 
     if (this.cursors.left.isDown || this.keys.a.isDown) {

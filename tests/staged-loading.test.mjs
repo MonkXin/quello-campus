@@ -11,6 +11,12 @@ const campusSource = readFileSync(new URL("../src/game/scenes/CampusScene.ts", i
 const cameraSource = readFileSync(new URL("../src/game/systems/CameraController.ts", import.meta.url), "utf8");
 const playerSource = readFileSync(new URL("../src/game/systems/PlayerController.ts", import.meta.url), "utf8");
 const collisionSource = readFileSync(new URL("../src/game/data/campusCollision.ts", import.meta.url), "utf8");
+const routeUrl = new URL("../src/game/data/campusRoute.ts", import.meta.url);
+const routeControllerUrl = new URL("../src/game/systems/RouteController.ts", import.meta.url);
+const routeSource = existsSync(routeUrl) ? readFileSync(routeUrl, "utf8") : "";
+const routeControllerSource = existsSync(routeControllerUrl)
+  ? readFileSync(routeControllerUrl, "utf8")
+  : "";
 
 test("initial preload only loads assets required by the title scene", () => {
   assert.match(preloadSource, /campus-base/);
@@ -65,6 +71,14 @@ test("the follow camera keeps the explorer low in frame and looks ahead", () => 
   assert.match(cameraSource, /setFollowOffset/);
   assert.match(cameraSource, /movement\.x \* 90/);
   assert.match(cameraSource, /movement\.y \* 58/);
+});
+
+test("tour mode follows an authored route while preserving manual input priority", () => {
+  assert.match(campusSource, /get\("tourMode"\) === "1"/);
+  assert.match(campusSource, /new RouteController/);
+  assert.match(routeSource, /CAMPUS_TOUR_ROUTE/);
+  assert.match(routeControllerSource, /setAutopilotVector/);
+  assert.match(routeControllerSource, /hasManualInput/);
 });
 
 test("entering from the title loads campus detail assets before starting the campus", () => {

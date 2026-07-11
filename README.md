@@ -40,6 +40,7 @@ Open `http://localhost:5174/`.
 - `?debugPoints=1`: show point names and radii.
 - `?debugCollision=1`: show major-building collision rectangles.
 - `?observerMode=1`: return to the original free-camera observer mode.
+- `?tourMode=1`: start a continuous cinematic walk; manual input temporarily takes priority.
 
 ## Standalone Site
 
