@@ -12,6 +12,10 @@ Expected Phase 1 filenames:
 - `particles/leaf.png`
 - `../ui/quello-campus-title.png`
 
+Experimental Phase 2 character:
+
+- `characters/student-walk.png` — normalized 4×4 RGBA sheet, 128×128 per frame.
+
 All map-sized layers must use the same canvas size and origin. Preferred canvas size is `4096 x 3072` or `5120 x 3840`.
 
 The current implementation now uses the first generated layered map set:
