@@ -100,6 +100,14 @@ test("tour mode follows an authored route while preserving manual input priority
   assert.match(routeSource, /220 \* 2, y: 510 \* 2/);
 });
 
+test("tour mode removes map-demo chrome and lets the foreground canopy pass by", () => {
+  assert.match(campusSource, /this\.cinematicMode/);
+  assert.match(campusSource, /item\.setVisible\(!this\.cinematicMode\)/);
+  assert.match(campusSource, /this\.cinematicMode \? 0\.12 : 1/);
+  assert.match(campusSource, /canopyAlpha/);
+  assert.match(campusSource, /Math\.sin\(time \/ 2400\) \* 14/);
+});
+
 test("the atmosphere combines drifting particles, sun patches, and wind streaks", () => {
   assert.match(atmosphereSource, /createSunPatches/);
   assert.match(atmosphereSource, /createWindStreaks/);

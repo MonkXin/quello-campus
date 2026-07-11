@@ -45,6 +45,7 @@ export class CampusScene extends Phaser.Scene {
   private site?: SiteConfig;
   private hudItems: Phaser.GameObjects.Text[] = [];
   private observerMode = false;
+  private cinematicMode = false;
 
   constructor() {
     super("CampusScene");
@@ -53,16 +54,18 @@ export class CampusScene extends Phaser.Scene {
   create() {
     this.cameras.main.setBackgroundColor("#102019");
     this.site = this.cache.json.get("site") as SiteConfig;
+    const searchParams = new URLSearchParams(window.location.search);
+    this.observerMode = searchParams.get("observerMode") === "1";
+    this.cinematicMode = searchParams.get("tourMode") === "1";
 
     this.createCampusArtLayers();
     this.createForegroundCanopy();
     new CinematicPostFX(this);
 
     this.inputController = new InputController(this);
-    this.observerMode = new URLSearchParams(window.location.search).get("observerMode") === "1";
     if (!this.observerMode) {
       this.playerController = new PlayerController(this, this.inputController);
-      if (new URLSearchParams(window.location.search).get("tourMode") === "1") {
+      if (this.cinematicMode) {
         this.routeController = new RouteController(this.inputController, this.playerController.avatar);
       }
     }
@@ -105,9 +108,11 @@ export class CampusScene extends Phaser.Scene {
       const parallaxX = (camera.scrollX + camera.displayWidth / 2 - MAP_WIDTH / 2) * -0.014;
       const parallaxY = (camera.scrollY + camera.displayHeight / 2 - MAP_HEIGHT / 2) * -0.01;
       this.foregroundCanopy.setPosition(
-        this.scale.width / 2 + parallaxX + Math.sin(time / 3600) * 4,
-        this.scale.height / 2 + parallaxY + Math.cos(time / 4200) * 3
+        this.scale.width / 2 + parallaxX + Math.sin(time / 2400) * 14,
+        this.scale.height / 2 + parallaxY + Math.cos(time / 3100) * 8
       );
+      const canopyAlpha = this.cinematicMode ? 0.68 + Math.sin(time / 5200) * 0.16 : 0.94;
+      this.foregroundCanopy.setAlpha(canopyAlpha);
     }
 
     this.waterHighlights.forEach((highlight, index) => {
@@ -318,6 +323,7 @@ export class CampusScene extends Phaser.Scene {
     const gap = isPortrait ? 34 : 38;
 
     this.hudItems.forEach((item, index) => {
+      item.setVisible(!this.cinematicMode);
       item.setPosition(startX, startY + index * gap);
       item.setFontSize(isPortrait ? 12 : 14);
       item.setAlpha(isPortrait ? 0.86 : 1);
@@ -397,6 +403,9 @@ export class CampusScene extends Phaser.Scene {
   }
 
   private createTransientHint() {
+    if (this.cinematicMode) {
+      return;
+    }
     const hint = ResponsiveViewport.createFixedHudText(
       this,
       this.scale.width / 2,
@@ -437,6 +446,8 @@ export class CampusScene extends Phaser.Scene {
       originY: 0,
       radius
     };
+    base.setAlpha(this.cinematicMode ? 0.12 : 1);
+    knob.setAlpha(this.cinematicMode ? 0.12 : 1);
     this.positionJoystick();
 
     base.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
