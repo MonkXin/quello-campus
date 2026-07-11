@@ -5,6 +5,7 @@ import { AudioController } from "../systems/AudioController";
 import { CameraController } from "../systems/CameraController";
 import { InputController } from "../systems/InputController";
 import { MapPointRegistry } from "../systems/MapPointRegistry";
+import { PlayerController } from "../systems/PlayerController";
 import { ResponsiveViewport } from "../systems/ResponsiveViewport";
 import type { MapPoint, SiteConfig } from "../types/content";
 
@@ -20,6 +21,7 @@ interface JoystickState {
 export class CampusScene extends Phaser.Scene {
   private inputController?: InputController;
   private cameraController?: CameraController;
+  private playerController?: PlayerController;
   private atmosphere?: AtmosphereController;
   private audio?: AudioController;
   private atmosphereLabel?: Phaser.GameObjects.Text;
@@ -50,7 +52,15 @@ export class CampusScene extends Phaser.Scene {
     this.createCampusArtLayers();
 
     this.inputController = new InputController(this);
-    this.cameraController = new CameraController(this, this.inputController);
+    const followMode = new URLSearchParams(window.location.search).get("followMode") === "1";
+    if (followMode) {
+      this.playerController = new PlayerController(this, this.inputController);
+    }
+    this.cameraController = new CameraController(
+      this,
+      this.inputController,
+      this.playerController?.avatar
+    );
     this.atmosphere = new AtmosphereController(this);
     this.audio = new AudioController(this);
 
@@ -76,6 +86,7 @@ export class CampusScene extends Phaser.Scene {
 
   update(time: number, delta: number) {
     this.cameraController?.update(delta);
+    this.playerController?.update(delta);
     this.atmosphere?.update(time);
 
     this.waterHighlights.forEach((highlight, index) => {

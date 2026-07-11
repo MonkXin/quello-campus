@@ -38,6 +38,7 @@ Open `http://localhost:5174/`.
 - `M`: toggle ambient audio.
 - `N`: focus the next future pet spot.
 - `?debugPoints=1`: show point names and radii.
+- `?followMode=1`: preview the Phase 2 character-follow camera with a temporary marker.
 
 ## Standalone Site
 

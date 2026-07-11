@@ -5,19 +5,26 @@ import type { InputController } from "./InputController";
 export class CameraController {
   private readonly camera: Phaser.Cameras.Scene2D.Camera;
   private speed = 260;
+  private readonly followsTarget: boolean;
   private dragPointerId: number | null = null;
   private lastDragX = 0;
   private lastDragY = 0;
 
   constructor(
     private readonly scene: Phaser.Scene,
-    private readonly input: InputController
+    private readonly input: InputController,
+    followTarget?: Phaser.GameObjects.GameObject
   ) {
     this.camera = scene.cameras.main;
+    this.followsTarget = Boolean(followTarget);
     this.camera.setBounds(0, 0, MAP_WIDTH, MAP_HEIGHT);
     this.camera.centerOn(MAP_WIDTH * 0.5, MAP_HEIGHT * 0.55);
     this.resize();
-    this.bindDragPan();
+    if (followTarget) {
+      this.camera.startFollow(followTarget, true, 0.09, 0.09);
+    } else {
+      this.bindDragPan();
+    }
   }
 
   resize() {
@@ -30,6 +37,9 @@ export class CameraController {
   }
 
   update(deltaMs: number) {
+    if (this.followsTarget) {
+      return;
+    }
     const movement = this.input.getMovementVector();
     const deltaSeconds = deltaMs / 1000;
 

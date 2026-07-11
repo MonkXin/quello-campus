@@ -7,6 +7,8 @@ const campusPreloadUrl = new URL("../src/game/scenes/CampusPreloadScene.ts", imp
 const campusPreloadSource = existsSync(campusPreloadUrl) ? readFileSync(campusPreloadUrl, "utf8") : "";
 const titleSource = readFileSync(new URL("../src/game/scenes/TitleScene.ts", import.meta.url), "utf8");
 const mainSource = readFileSync(new URL("../src/main.ts", import.meta.url), "utf8");
+const campusSource = readFileSync(new URL("../src/game/scenes/CampusScene.ts", import.meta.url), "utf8");
+const cameraSource = readFileSync(new URL("../src/game/systems/CameraController.ts", import.meta.url), "utf8");
 
 test("initial preload only loads assets required by the title scene", () => {
   assert.match(preloadSource, /campus-base/);
@@ -15,6 +17,12 @@ test("initial preload only loads assets required by the title scene", () => {
   assert.doesNotMatch(preloadSource, /campus-water/);
   assert.doesNotMatch(preloadSource, /campus-shadows/);
   assert.doesNotMatch(preloadSource, /campus-canopy/);
+});
+
+test("experimental follow mode is opt-in and uses camera smoothing", () => {
+  assert.match(campusSource, /get\("followMode"\) === "1"/);
+  assert.match(campusSource, /new PlayerController/);
+  assert.match(cameraSource, /startFollow\(followTarget, true, 0\.09, 0\.09\)/);
 });
 
 test("entering from the title loads campus detail assets before starting the campus", () => {
