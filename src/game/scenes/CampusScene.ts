@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 import { MAP_HEIGHT, MAP_SCALE, MAP_WIDTH } from "../config";
+import { CAMPUS_FOREGROUND_NODES } from "../data/campusForegroundNodes";
+import { RASTER_MAP_ADAPTER } from "../map/CampusMapAdapter";
 import { AtmosphereController } from "../systems/AtmosphereController";
 import { AudioController } from "../systems/AudioController";
 import { CameraController } from "../systems/CameraController";
@@ -9,6 +11,7 @@ import { MapPointRegistry } from "../systems/MapPointRegistry";
 import { PlayerController } from "../systems/PlayerController";
 import { ResponsiveViewport } from "../systems/ResponsiveViewport";
 import { RouteController } from "../systems/RouteController";
+import { WorldForegroundController } from "../systems/WorldForegroundController";
 import type { MapPoint, SiteConfig } from "../types/content";
 
 interface JoystickState {
@@ -25,6 +28,7 @@ export class CampusScene extends Phaser.Scene {
   private cameraController?: CameraController;
   private playerController?: PlayerController;
   private routeController?: RouteController;
+  private worldForeground?: WorldForegroundController;
   private atmosphere?: AtmosphereController;
   private audio?: AudioController;
   private atmosphereLabel?: Phaser.GameObjects.Text;
@@ -61,6 +65,12 @@ export class CampusScene extends Phaser.Scene {
     this.createCampusArtLayers();
     if (!this.cinematicMode) {
       this.createForegroundCanopy();
+    } else {
+      this.worldForeground = new WorldForegroundController(
+        this,
+        RASTER_MAP_ADAPTER,
+        CAMPUS_FOREGROUND_NODES
+      );
     }
     new CinematicPostFX(this);
 
@@ -106,6 +116,7 @@ export class CampusScene extends Phaser.Scene {
     this.cameraController?.update(delta);
     this.playerController?.update(delta);
     this.atmosphere?.update(time);
+    this.worldForeground?.update(time);
     if (this.foregroundCanopy) {
       const camera = this.cameras.main;
       const parallaxX = (camera.scrollX + camera.displayWidth / 2 - MAP_WIDTH / 2) * -0.014;
@@ -165,11 +176,13 @@ export class CampusScene extends Phaser.Scene {
       .setDepth(92)
       .setBlendMode(Phaser.BlendModes.ADD);
 
-    this.add
-      .image(0, 0, "campus-canopy")
-      .setOrigin(0)
-      .setScale(MAP_SCALE)
-      .setDepth(112);
+    if (!this.cinematicMode) {
+      this.add
+        .image(0, 0, "campus-canopy")
+        .setOrigin(0)
+        .setScale(MAP_SCALE)
+        .setDepth(112);
+    }
 
     this.waterTween = this.tweens.add({
       targets: this.waterLayer,

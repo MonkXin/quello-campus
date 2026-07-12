@@ -159,10 +159,18 @@ test("tour mode removes map-demo chrome and lets the foreground canopy pass by",
   assert.match(campusSource, /Math\.sin\(time \/ 2400\) \* 14/);
 });
 
-test("cinematic mode uses world-aligned canopy instead of a fixed screen mask", () => {
+test("ordinary mode keeps full canopy while cinematic mode avoids the fixed screen mask", () => {
   assert.match(campusSource, /if \(!this\.cinematicMode\) \{\s*this\.createForegroundCanopy\(\)/);
-  assert.match(campusSource, /"campus-canopy"/);
+  assert.match(campusSource, /if \(!this\.cinematicMode\)[\s\S]*"campus-canopy"/);
   assert.match(campusSource, /setDepth\(112\)/);
+});
+
+test("cinematic mode creates and updates localized world foreground nodes", () => {
+  assert.match(campusSource, /new WorldForegroundController/);
+  assert.match(campusSource, /CAMPUS_FOREGROUND_NODES/);
+  assert.match(campusSource, /RASTER_MAP_ADAPTER/);
+  assert.match(campusSource, /else \{\s*this\.worldForeground = new WorldForegroundController/);
+  assert.match(campusSource, /worldForeground\?\.update\(time\)/);
 });
 
 test("the atmosphere combines drifting particles, sun patches, and wind streaks", () => {
