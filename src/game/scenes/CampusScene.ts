@@ -72,7 +72,8 @@ export class CampusScene extends Phaser.Scene {
     this.cameraController = new CameraController(
       this,
       this.inputController,
-      this.playerController?.avatar
+      this.playerController?.avatar,
+      this.cinematicMode
     );
     this.atmosphere = new AtmosphereController(this);
     this.audio = new AudioController(this);

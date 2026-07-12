@@ -23,6 +23,8 @@ const atmosphereSource = readFileSync(
 );
 const postFxUrl = new URL("../src/game/systems/CinematicPostFX.ts", import.meta.url);
 const postFxSource = existsSync(postFxUrl) ? readFileSync(postFxUrl, "utf8") : "";
+const mapAdapterUrl = new URL("../src/game/map/CampusMapAdapter.ts", import.meta.url);
+const mapAdapterSource = existsSync(mapAdapterUrl) ? readFileSync(mapAdapterUrl, "utf8") : "";
 
 test("initial preload only loads assets required by the title scene", () => {
   assert.match(preloadSource, /campus-base/);
@@ -87,6 +89,19 @@ test("the follow camera keeps the explorer low in frame and looks ahead", () => 
   assert.match(cameraSource, /this\.lookAheadX = isPortrait \? 28 : 90/);
   assert.match(cameraSource, /movement\.y \* 58/);
   assert.match(cameraSource, /baseFollowOffsetY = -height \*/);
+});
+
+test("cinematic camera zooms into the explorer instead of presenting the whole map", () => {
+  assert.match(cameraSource, /this\.cinematicMode\s*\? 1\.28/);
+  assert.match(cameraSource, /this\.cinematicMode\s*\? 1\.08/);
+  assert.match(cameraSource, /0\.26/);
+});
+
+test("map coordinates are isolated behind an adapter for future geographic maps", () => {
+  assert.match(mapAdapterSource, /interface CampusMapAdapter/);
+  assert.match(mapAdapterSource, /lngLatToWorld/);
+  assert.match(mapAdapterSource, /RasterCampusMapAdapter/);
+  assert.match(playerSource, /RASTER_MAP_ADAPTER\.worldToSource/);
 });
 
 test("tour mode follows an authored route while preserving manual input priority", () => {

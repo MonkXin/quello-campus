@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { MAP_HEIGHT, MAP_WIDTH } from "../config";
 import { CAMPUS_BUILDING_COLLISIONS, circleIntersectsRect } from "../data/campusCollision";
+import { RASTER_MAP_ADAPTER } from "../map/CampusMapAdapter";
 import type { InputController } from "./InputController";
 
 const SPAWN_X = 500 * 2;
@@ -76,8 +77,9 @@ export class PlayerController {
   }
 
   private canOccupy(worldX: number, worldY: number): boolean {
-    const sourceWorldX = worldX / 2;
-    const sourceWorldY = worldY / 2;
+    const sourcePoint = RASTER_MAP_ADAPTER.worldToSource({ x: worldX, y: worldY });
+    const sourceWorldX = sourcePoint.x;
+    const sourceWorldY = sourcePoint.y;
     const sourceRadius = COLLISION_RADIUS / 2;
     if (
       CAMPUS_BUILDING_COLLISIONS.some((rect) =>
@@ -96,8 +98,12 @@ export class PlayerController {
     ];
 
     return samples.every(([offsetX, offsetY]) => {
-      const sourceX = Math.round((worldX + offsetX) / 2);
-      const sourceY = Math.round((worldY + offsetY) / 2);
+      const samplePoint = RASTER_MAP_ADAPTER.worldToSource({
+        x: worldX + offsetX,
+        y: worldY + offsetY
+      });
+      const sourceX = Math.round(samplePoint.x);
+      const sourceY = Math.round(samplePoint.y);
       const pixel = this.avatar.scene.textures.getPixel(sourceX, sourceY, "campus-water");
       const basePixel = this.avatar.scene.textures.getPixel(sourceX, sourceY, "campus-base");
       const baseLooksLikeWater = Boolean(

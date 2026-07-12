@@ -17,7 +17,8 @@ export class CameraController {
   constructor(
     private readonly scene: Phaser.Scene,
     private readonly input: InputController,
-    followTarget?: Phaser.GameObjects.GameObject
+    followTarget?: Phaser.GameObjects.GameObject,
+    private readonly cinematicMode = false
   ) {
     this.camera = scene.cameras.main;
     this.followsTarget = Boolean(followTarget);
@@ -35,10 +36,16 @@ export class CameraController {
     const width = this.scene.scale.width;
     const height = this.scene.scale.height;
     const isPortrait = height > width;
-    const zoom = isPortrait ? 0.78 : 0.92;
+    const zoom = isPortrait
+      ? this.cinematicMode
+        ? 1.08
+        : 0.78
+      : this.cinematicMode
+        ? 1.28
+        : 0.92;
 
-    this.camera.setZoom(Math.min(1, Math.max(0.68, zoom)));
-    this.baseFollowOffsetY = -height * (isPortrait ? 0.1 : 0.14);
+    this.camera.setZoom(Math.max(0.68, zoom));
+    this.baseFollowOffsetY = -height * (this.cinematicMode ? 0.26 : isPortrait ? 0.1 : 0.14);
     this.lookAheadX = isPortrait ? 28 : 90;
   }
 
