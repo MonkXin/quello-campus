@@ -38,14 +38,14 @@ export class CameraController {
     const isPortrait = height > width;
     const zoom = isPortrait
       ? this.cinematicMode
-        ? 1.08
+        ? 1.35
         : 0.78
       : this.cinematicMode
-        ? 1.28
+        ? 1.62
         : 0.92;
 
     this.camera.setZoom(Math.max(0.68, zoom));
-    this.baseFollowOffsetY = -height * (this.cinematicMode ? 0.26 : isPortrait ? 0.1 : 0.14);
+    this.baseFollowOffsetY = height * (this.cinematicMode ? 0.2 : isPortrait ? 0.1 : 0.14);
     this.lookAheadX = isPortrait ? 28 : 90;
   }
 

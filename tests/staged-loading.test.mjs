@@ -93,13 +93,13 @@ test("the follow camera keeps the explorer low in frame and looks ahead", () => 
   assert.match(cameraSource, /movement\.x \* this\.lookAheadX/);
   assert.match(cameraSource, /this\.lookAheadX = isPortrait \? 28 : 90/);
   assert.match(cameraSource, /movement\.y \* 58/);
-  assert.match(cameraSource, /baseFollowOffsetY = -height \*/);
+  assert.match(cameraSource, /baseFollowOffsetY = height \*/);
 });
 
 test("cinematic camera zooms into the explorer instead of presenting the whole map", () => {
-  assert.match(cameraSource, /this\.cinematicMode\s*\? 1\.28/);
-  assert.match(cameraSource, /this\.cinematicMode\s*\? 1\.08/);
-  assert.match(cameraSource, /0\.26/);
+  assert.match(cameraSource, /this\.cinematicMode\s*\? 1\.62/);
+  assert.match(cameraSource, /this\.cinematicMode\s*\? 1\.35/);
+  assert.match(cameraSource, /0\.2/);
 });
 
 test("map coordinates are isolated behind an adapter for future geographic maps", () => {
