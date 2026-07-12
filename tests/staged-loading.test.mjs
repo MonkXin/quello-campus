@@ -81,6 +81,11 @@ test("the large route canopy ships as an alpha WebP runtime asset", () => {
   assert.doesNotMatch(campusPreloadSource, /foreground\/route-canopy\.png/);
 });
 
+test("the world-aligned canopy also ships as an alpha WebP runtime asset", () => {
+  assert.match(campusPreloadSource, /map\/foreground-canopy\.webp/);
+  assert.doesNotMatch(campusPreloadSource, /map\/foreground-canopy\.png/);
+});
+
 test("the follow camera keeps the explorer low in frame and looks ahead", () => {
   assert.match(cameraSource, /baseFollowOffsetY/);
   assert.match(cameraSource, /Phaser\.Math\.Linear/);

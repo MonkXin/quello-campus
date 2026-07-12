@@ -5,7 +5,7 @@ Place final runtime art in this folder when generated.
 Expected Phase 1 filenames:
 
 - `map/base.webp` or `map/base.png`
-- `map/foreground-canopy.png`
+- `map/foreground-canopy.webp`
 - `map/shadows.png`
 - `map/water.png`
 - `atmosphere/dusk-overlay.png`
@@ -21,7 +21,7 @@ All map-sized layers must use the same canvas size and origin. Preferred canvas 
 The current implementation now uses the first generated layered map set:
 
 - `map/base.webp` (compressed runtime derivative of the generated PNG)
-- `map/foreground-canopy.png`
+- `map/foreground-canopy.webp`
 - `map/shadows.png`
 - `map/water.png`
 - `atmosphere/dusk-overlay.png`
@@ -47,6 +47,6 @@ Reason:
 
 - it has a strong foreground-framing feel for the entry screen;
 - it is square and does not match the 16:9 authored campus map composition;
-- it cannot replace `map/foreground-canopy.png`, which must stay aligned to the full campus map canvas.
+- it cannot replace `map/foreground-canopy.webp`, which must stay aligned to the full campus map canvas.
 
 For a future runtime map canopy replacement, generate a same-size layer that exactly matches the main map canvas and origin.
