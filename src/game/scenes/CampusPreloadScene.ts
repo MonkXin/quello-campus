@@ -62,6 +62,10 @@ export class CampusPreloadScene extends Phaser.Scene {
     this.load.image("campus-dusk-overlay", "assets/campus/atmosphere/dusk-overlay.png");
     this.load.image("campus-cloud-shadows", "assets/campus/atmosphere/cloud-shadows.png");
     this.load.image("route-canopy", "assets/campus/foreground/route-canopy.webp");
+    this.load.image("canopy-node-left", "assets/campus/foreground/nodes/left.webp");
+    this.load.image("canopy-node-upper", "assets/campus/foreground/nodes/upper.webp");
+    this.load.image("canopy-node-right", "assets/campus/foreground/nodes/right.webp");
+    this.load.image("canopy-node-lower", "assets/campus/foreground/nodes/lower.webp");
     this.load.spritesheet("student-walk", "assets/campus/characters/student-walk.png", {
       frameWidth: 128,
       frameHeight: 128

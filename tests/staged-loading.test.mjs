@@ -100,6 +100,14 @@ test("the world-aligned canopy also ships as an alpha WebP runtime asset", () =>
   assert.doesNotMatch(campusPreloadSource, /map\/foreground-canopy\.png/);
 });
 
+test("localized canopy clusters preload as transparent WebP runtime assets", () => {
+  for (const name of ["left", "upper", "right", "lower"]) {
+    assert.match(campusPreloadSource, new RegExp(`canopy-node-${name}`));
+    assert.match(campusPreloadSource, new RegExp(`foreground/nodes/${name}\\.webp`));
+  }
+  assert.doesNotMatch(campusPreloadSource, /foreground\/nodes\/[^"']+\.png/);
+});
+
 test("the follow camera keeps the explorer low in frame and looks ahead", () => {
   assert.match(cameraSource, /baseFollowOffsetY/);
   assert.match(cameraSource, /Phaser\.Math\.Linear/);
