@@ -25,6 +25,20 @@ const postFxUrl = new URL("../src/game/systems/CinematicPostFX.ts", import.meta.
 const postFxSource = existsSync(postFxUrl) ? readFileSync(postFxUrl, "utf8") : "";
 const mapAdapterUrl = new URL("../src/game/map/CampusMapAdapter.ts", import.meta.url);
 const mapAdapterSource = existsSync(mapAdapterUrl) ? readFileSync(mapAdapterUrl, "utf8") : "";
+const foregroundControllerUrl = new URL(
+  "../src/game/systems/WorldForegroundController.ts",
+  import.meta.url
+);
+const foregroundControllerSource = existsSync(foregroundControllerUrl)
+  ? readFileSync(foregroundControllerUrl, "utf8")
+  : "";
+const foregroundNodesUrl = new URL(
+  "../src/game/data/campusForegroundNodes.ts",
+  import.meta.url
+);
+const foregroundNodesSource = existsSync(foregroundNodesUrl)
+  ? readFileSync(foregroundNodesUrl, "utf8")
+  : "";
 
 test("initial preload only loads assets required by the title scene", () => {
   assert.match(preloadSource, /campus-base/);
@@ -107,6 +121,15 @@ test("map coordinates are isolated behind an adapter for future geographic maps"
   assert.match(mapAdapterSource, /lngLatToWorld/);
   assert.match(mapAdapterSource, /RasterCampusMapAdapter/);
   assert.match(playerSource, /RASTER_MAP_ADAPTER\.worldToSource/);
+});
+
+test("localized foreground nodes use adapted world coordinates and reduced-motion-safe sway", () => {
+  assert.match(foregroundControllerSource, /CampusMapAdapter/);
+  assert.match(foregroundControllerSource, /sourceToWorld/);
+  assert.doesNotMatch(foregroundControllerSource, /MAP_SCALE/);
+  assert.match(foregroundControllerSource, /setDepth\(node\.depth\)/);
+  assert.match(foregroundControllerSource, /prefers-reduced-motion/);
+  assert.ok((foregroundNodesSource.match(/id:/g) ?? []).length >= 4);
 });
 
 test("tour mode follows an authored route while preserving manual input priority", () => {
