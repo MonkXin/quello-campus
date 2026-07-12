@@ -123,6 +123,12 @@ test("tour mode removes map-demo chrome and lets the foreground canopy pass by",
   assert.match(campusSource, /Math\.sin\(time \/ 2400\) \* 14/);
 });
 
+test("cinematic mode uses world-aligned canopy instead of a fixed screen mask", () => {
+  assert.match(campusSource, /if \(!this\.cinematicMode\) \{\s*this\.createForegroundCanopy\(\)/);
+  assert.match(campusSource, /"campus-canopy"/);
+  assert.match(campusSource, /setDepth\(112\)/);
+});
+
 test("the atmosphere combines drifting particles, sun patches, and wind streaks", () => {
   assert.match(atmosphereSource, /createSunPatches/);
   assert.match(atmosphereSource, /createWindStreaks/);

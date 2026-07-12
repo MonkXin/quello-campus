@@ -59,7 +59,9 @@ export class CampusScene extends Phaser.Scene {
     this.cinematicMode = searchParams.get("tourMode") === "1";
 
     this.createCampusArtLayers();
-    this.createForegroundCanopy();
+    if (!this.cinematicMode) {
+      this.createForegroundCanopy();
+    }
     new CinematicPostFX(this);
 
     this.inputController = new InputController(this);
