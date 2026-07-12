@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { getCampusCanopyAssets } from "../assets/campusDetailAssets";
 
 export class CampusPreloadScene extends Phaser.Scene {
   private loadFailed = false;
@@ -58,14 +59,11 @@ export class CampusPreloadScene extends Phaser.Scene {
     this.load.json("events", "data/events.json");
     this.load.image("campus-water", "assets/campus/map/water.png");
     this.load.image("campus-shadows", "assets/campus/map/shadows.png");
-    this.load.image("campus-canopy", "assets/campus/map/foreground-canopy.webp");
     this.load.image("campus-dusk-overlay", "assets/campus/atmosphere/dusk-overlay.png");
     this.load.image("campus-cloud-shadows", "assets/campus/atmosphere/cloud-shadows.png");
-    this.load.image("route-canopy", "assets/campus/foreground/route-canopy.webp");
-    this.load.image("canopy-node-left", "assets/campus/foreground/nodes/left.webp");
-    this.load.image("canopy-node-upper", "assets/campus/foreground/nodes/upper.webp");
-    this.load.image("canopy-node-right", "assets/campus/foreground/nodes/right.webp");
-    this.load.image("canopy-node-lower", "assets/campus/foreground/nodes/lower.webp");
+    const cinematicMode = new URLSearchParams(window.location.search).get("tourMode") === "1";
+    const canopyAssets = getCampusCanopyAssets(cinematicMode);
+    canopyAssets.forEach((asset) => this.load.image(asset.key, asset.path));
     this.load.spritesheet("student-walk", "assets/campus/characters/student-walk.png", {
       frameWidth: 128,
       frameHeight: 128

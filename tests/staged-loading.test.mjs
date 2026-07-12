@@ -39,6 +39,8 @@ const foregroundNodesUrl = new URL(
 const foregroundNodesSource = existsSync(foregroundNodesUrl)
   ? readFileSync(foregroundNodesUrl, "utf8")
   : "";
+const detailAssetsUrl = new URL("../src/game/assets/campusDetailAssets.ts", import.meta.url);
+const detailAssetsSource = existsSync(detailAssetsUrl) ? readFileSync(detailAssetsUrl, "utf8") : "";
 
 test("initial preload only loads assets required by the title scene", () => {
   assert.match(preloadSource, /campus-base/);
@@ -83,29 +85,47 @@ test("major campus buildings use data-driven collision zones", () => {
 });
 
 test("the route canopy is staged and moves as a foreground parallax layer", () => {
-  assert.match(campusPreloadSource, /"route-canopy"/);
-  assert.match(campusPreloadSource, /foreground\/route-canopy\.webp/);
+  assert.match(detailAssetsSource, /"route-canopy"/);
+  assert.match(detailAssetsSource, /foreground\/route-canopy\.webp/);
   assert.match(campusSource, /createForegroundCanopy/);
   assert.match(campusSource, /setScrollFactor\(0\)/);
   assert.match(campusSource, /foregroundCanopy\.setPosition/);
 });
 
 test("the large route canopy ships as an alpha WebP runtime asset", () => {
-  assert.match(campusPreloadSource, /foreground\/route-canopy\.webp/);
-  assert.doesNotMatch(campusPreloadSource, /foreground\/route-canopy\.png/);
+  assert.match(detailAssetsSource, /foreground\/route-canopy\.webp/);
+  assert.doesNotMatch(detailAssetsSource, /foreground\/route-canopy\.png/);
 });
 
 test("the world-aligned canopy also ships as an alpha WebP runtime asset", () => {
-  assert.match(campusPreloadSource, /map\/foreground-canopy\.webp/);
-  assert.doesNotMatch(campusPreloadSource, /map\/foreground-canopy\.png/);
+  assert.match(detailAssetsSource, /map\/foreground-canopy\.webp/);
+  assert.doesNotMatch(detailAssetsSource, /map\/foreground-canopy\.png/);
 });
 
 test("localized canopy clusters preload as transparent WebP runtime assets", () => {
   for (const name of ["left", "upper", "right", "lower"]) {
-    assert.match(campusPreloadSource, new RegExp(`canopy-node-${name}`));
-    assert.match(campusPreloadSource, new RegExp(`foreground/nodes/${name}\\.webp`));
+    assert.match(detailAssetsSource, new RegExp(`canopy-node-${name}`));
+    assert.match(detailAssetsSource, new RegExp(`foreground/nodes/${name}\\.webp`));
   }
-  assert.doesNotMatch(campusPreloadSource, /foreground\/nodes\/[^"']+\.png/);
+  assert.doesNotMatch(detailAssetsSource, /foreground\/nodes\/[^"']+\.png/);
+});
+
+test("campus preload registers only the canopy profile selected by tour mode", () => {
+  assert.match(campusPreloadSource, /getCampusCanopyAssets/);
+  assert.match(campusPreloadSource, /get\("tourMode"\) === "1"/);
+  assert.match(campusPreloadSource, /canopyAssets\.forEach/);
+  assert.doesNotMatch(campusPreloadSource, /this\.load\.image\("campus-canopy"/);
+  assert.doesNotMatch(campusPreloadSource, /this\.load\.image\("canopy-node-left"/);
+});
+
+test("campus canopy assets are split into cinematic and ordinary profiles", () => {
+  assert.match(detailAssetsSource, /CINEMATIC_CANOPY_ASSETS/);
+  assert.match(detailAssetsSource, /ORDINARY_CANOPY_ASSETS/);
+  assert.match(detailAssetsSource, /getCampusCanopyAssets/);
+  assert.match(detailAssetsSource, /canopy-node-left/);
+  assert.match(detailAssetsSource, /campus-canopy/);
+  assert.doesNotMatch(detailAssetsSource, /from "phaser"/);
+  assert.doesNotMatch(detailAssetsSource, /window\./);
 });
 
 test("the follow camera keeps the explorer low in frame and looks ahead", () => {
@@ -194,7 +214,7 @@ test("entering from the title loads campus detail assets before starting the cam
   assert.match(titleSource, /this\.scene\.start\("CampusPreloadScene"\)/);
   assert.match(campusPreloadSource, /campus-water/);
   assert.match(campusPreloadSource, /campus-shadows/);
-  assert.match(campusPreloadSource, /campus-canopy/);
+  assert.match(campusPreloadSource, /getCampusCanopyAssets/);
   assert.match(campusPreloadSource, /this\.scene\.start\("CampusScene"\)/);
   assert.match(mainSource, /CampusPreloadScene/);
 });
